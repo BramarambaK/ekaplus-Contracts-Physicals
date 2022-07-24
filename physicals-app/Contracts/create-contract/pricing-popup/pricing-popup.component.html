@@ -1,0 +1,46 @@
+<ng-template #content let-modal >
+  <div class="modal-header marp">
+    <h4 class="modal-title" id="modal-basic-title">Pricing</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <!-- <div class="modal-body">  -->
+  <div *ngIf="!index" class="px-2">
+    <pricing [fromPricing]="false" [indexPricing]="false" [formulaId]="formulaId" [outerModal]="modal" [contractDetails]="contractDetails"
+      [itemIndex]="itemIndex" [valuation]="valuation" [mdmPriceUnit]="mdmPriceUnit"></pricing>
+  </div>
+  <div *ngIf="index">
+    <app-formula-form [fromPricing]="false" [valuation]="valuation" [indexPricing]="true" [outerModal]="modal"
+      [contractDetails]="contractDetails" [itemIndex]="itemIndex" [mdmPriceUnit]="mdmPriceUnit" [fromViewContractPage]="fromViewContractPage"></app-formula-form>
+  </div>
+  <!-- </div> -->
+  <!-- <div class="modal-footer">
+      <button type="button" class="btn btn-success" (click)="modal.dismiss('use formula click')">USE FORMULA</button>
+   </div> -->
+</ng-template>
+<div class="btn-group mr-3">
+  <span class="" (click)="open(content)">
+    <span *ngIf="!formula">Define Formula</span>
+
+    <!-- <i *ngIf="formula" class="fas fa-times-circle icon"></i> -->
+  </span>
+
+  <div *ngIf="formula" class="btn-group set-position" ngbDropdown role="group"
+    aria-label="Button group with nested dropdown">
+    <span class="btn popup-link dropdown-toggle-split" ngbDropdownToggle><span
+        class="mr-2  ellipsis" title="{{formula}}">{{ formula }}</span></span>
+    <div class="dropdown-menu dropdown-menu-padding" [hidden]="checkItemQty" ngbDropdownMenu>
+      <div ngbDropdownItem class="e">
+        <app-formula-details-popup [DataForPricing]="contractDetails" [disableFormulaModification]="disableFormulaModification" [formulaId]="formulaId"  [itemIndex]="itemIndex"
+          [mdmPriceUnit]="mdmPriceUnit" [fromViewContractPage]="fromViewContractPage">
+        </app-formula-details-popup>
+      </div>
+      <div ngbDropdownItem class="e" [hidden]="disableFormulaModification">
+        <span class="px-1" (click)="open(content)">
+          Change Formula
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

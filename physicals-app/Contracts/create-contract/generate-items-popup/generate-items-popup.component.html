@@ -1,0 +1,34 @@
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <div class="modal-title" id="modal-basic-title">{{fields.generateItems.label}}</div>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="GenerateDataForm">
+      <label>{{fields.deliveryPeriod.label}}</label>
+      <div>
+        <my-date-picker type="date" class="mydate-picker" formControlName="from_date" [options]="deliveryFromDateOptions" (dateChanged)="onDateChanged($event)"></my-date-picker>
+        <i class="material-icons">
+          maximize
+        </i>
+        <my-date-picker type="date" class="mydate-picker" formControlName="to_date" [options]="deliveryToDateOptions"></my-date-picker>
+      </div>
+      <div class="form-group mt-2">
+        <label>{{fields.itemDeliveryFrequency.label}}</label>
+        <div class="input-group w-300">
+          <select class="form-control" formControlName="frequency" name="" id="">
+            <option *ngFor="let option of fields.itemDeliveryFrequency.options" [value]="option.value">{{option.key}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="numItems"><span>{{numItems}} items</span> will be generated</div>
+    </form>
+  </div>
+  <div class="modal-footer justify-content-between p-2">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('Cancel click')">{{fields.cancelBtn.label}}</button>
+    <button type="button" class="btn btn-primary" (click)="generateListItems(modal)">{{fields.generateBtn.label}}</button>
+  </div>
+</ng-template>
+

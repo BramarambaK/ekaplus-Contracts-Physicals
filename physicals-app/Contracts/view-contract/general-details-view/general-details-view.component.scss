@@ -1,0 +1,53 @@
+@import '../../../styles/contract';
+
+.heading-container{
+    padding: 7px 10px;
+    border-bottom: 1px solid lightgrey;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+}
+
+.genDetails{
+    table{
+        margin: 10px 50px 0 0;
+    }
+}
+
+td{
+    padding: 5px 30px 5px 10px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.header-btn{
+    font-size: 12px;
+    color: silver;
+    cursor: pointer;
+    padding: 5px 10px;
+    &:hover{
+        color: #0275d8;
+        background: #cccccc85;
+        border-radius: 3px;
+    }
+}
+
+.newItem{
+    font-size: 12px;
+    font-weight: 400;
+    color: silver;
+    padding: 5px 10px;
+}
+
+.line{
+    border-left: 1.5px solid #a0a0a0;
+}
+
+.line1{
+    border-left: 1.8px solid #ccc;
+}
+
+.optional-heading{
+    margin: 39px 10px 0px; 
+}

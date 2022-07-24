@@ -1,0 +1,50 @@
+<ng-template #content let-modal>
+   <div class="modal-header">
+      <div class="modal-title" id="modal-basic-title">Contract Approval</div>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+         <span aria-hidden="true">&times;</span>
+      </button>
+   </div>
+   <div class="modal-body">
+      <p *ngIf="showWarning">
+            <ngb-alert class="approve-warning" type="danger" (close)="closeAlert(alert)">{{errorMsg}}</ngb-alert>
+      </p>
+      <div *ngIf="loading" class="loader"></div>
+      <table *ngIf="!loading">
+         <!-- <tr class="px-1">
+            <th>Trader Desk ({{numberOfApprovalLevels}} approval{{numberOfApprovalLevels>1 ? 's':''}} needed)</th>
+         </tr> -->
+         <tr style="font-weight: 800">
+            <td>Approval Level Name</td>
+            <td>Suggested Approver</td>
+            <td>Self Approve</td>
+         </tr>
+         <ng-container>
+            <ng-container *ngFor="let sublevel of approvalForm.controls;let j = index" class="approvers">
+               <tr>
+                  <td>{{approvalLevels[j].approvalLevelName}}</td>
+               </tr>
+               <tr *ngIf="approvalLevels[j].subLevelNotAvailable">
+                  <td style="padding-left:15px">Sublevel not available</td>
+               </tr>
+               <tr *ngFor="let level of sublevel.controls; let i = index">
+                  <td style="padding-left:15px">{{approvalLevels[j].approvalSubLevelDos[i].approvalSubLevelName}}</td>
+                  <td>
+                     <!-- <input type="radio" value="approver" [name]="approvalLevels[j].approvalSubLevelDos[i].approvalSubLevelName" [formControl]="getControl(j,i,'radio')"><span class="d-inline-block px-2">Assign</span> -->
+                     <select class="form-control select" name="" id="" [formControl]="getControl(j,i,'approver')" [ngClass]="{ 'border-red' : getClass(j,i) } ">
+                        <option *ngFor="let option of approvers[approvalLevels[j].approvalSubLevelDos[i].approvalSubLevelId]" [value]="option.key">{{option.value}}</option>
+                     </select>  
+                  </td>
+                  <td>
+                     <input type="checkbox" value="self" [name]="approvalLevels[j].approvalSubLevelDos[i].approvalSubLevelName" [formControl]="getControl(j,i,'radio')">
+                  </td>
+               </tr>
+            </ng-container>
+         </ng-container>
+      </table>
+   </div>
+   <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" (click)="redirect(modal)">CANCEL</button>
+      <button type="button" class="btn btn-primary" (click)="submit(modal)">SUBMIT</button>
+   </div>
+</ng-template>

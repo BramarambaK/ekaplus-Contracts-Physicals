@@ -1,0 +1,28 @@
+.keyboard-icon{
+    cursor: pointer;
+}
+
+.modal-body{
+    position: relative;
+    flex: 1 1 auto;
+    padding: 1rem;
+    padding: 10px
+}
+
+.modal-header{
+    border: none;
+    padding: 5px 10px 0;
+}
+
+.modal-footer{
+    border: 0;
+    padding: 0px 10px 10px 0px;
+}
+
+textarea{
+    overflow: auto;
+    resize: vertical;
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+}

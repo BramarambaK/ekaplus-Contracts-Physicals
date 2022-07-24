@@ -1,0 +1,279 @@
+<div class="header">
+    <span>{{fields.generalDetails.label}}
+        <span *ngIf="isEditContract()" class="contractRef">Contract Ref : {{contractData?.contractRefNo}}</span>
+    </span>
+    <app-recommendation-popup #textToContract (action)="useTextToContract($event)" class="rec-popup"></app-recommendation-popup>
+</div>
+<ng-container *ngIf="apiCalled">
+    <div class="blur"></div>
+    <div>
+        <div class="loader"></div>
+    </div>
+</ng-container>
+<div class="body position-relative">
+    <ng-container *ngIf="initLoader">
+        <div class="init-blur"></div>
+        <div>
+            <div class="init-loader"></div>
+        </div>
+    </ng-container>
+    <div [formGroup]="generalDetailsForm" class="form">
+        <div class="d-flex" *ngIf="appObject!=='template' && action==='create'">
+            <div class="formGroup">
+                <label>{{fields.templateId.label}}</label>
+                <select class="form-control" formControlName="templateId" (change)="getSelectedTxt($event,'templateId')">
+                    <option [ngValue]="null" class="placeholder">Select</option>
+                    <option *ngFor="let option of fields.templateId.options" [value]="option.key">{{option.value}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="d-flex" *ngIf="appObject==='template'">
+            <div class="formGroup">
+                <label>{{fields.templateName.label}}</label>
+                <input type="text" class="form-control" name="templateName" formControlName="templateName" (change)="getSelectedTxt($event,'templateName','text')"
+                    [class.is-invalid]="validateField('templateName')">
+            </div>
+        </div>
+        <div class="holder">
+            <div class="d-flex flex-wrap">
+                <div class="formGroup">
+                    <label>{{fields.issueDate.label}}</label>
+                    <!-- <input class="form-control" type="date" name="" min="2019-1-15" formControlName="issueDate"> -->
+                    <my-date-picker id="contractIssueDate" type="date" title=" valid date format : DD-MMM-YYYY " class="mydate-picker one-field d-block" formControlName="issueDate"
+                         [options]="myDatePickerOptions" (dateChanged)="onDateChanged($event, 'issueDate');getSelectedTxt($event,'contractIssueDate','date')"></my-date-picker>
+                </div>
+                <div class="formGroup">
+                    <label>{{fields.dealType.label}}</label>
+                    <select class="form-control" formControlName="dealType" (change)="getSelectedTxt($event,'dealType')" [ngClass]="setFieldClasses('dealType')">
+                        <option [ngValue]="null" class="placeholder">Select</option>
+                        <option *ngFor="let option of fields.dealType.options" [value]="option.key">{{option.value}}</option>
+                    </select>
+                </div>
+                <div class="formGroup">
+                    <label>{{fields.traderUserId.label}}</label>
+                    <select class="form-control" formControlName="traderUserId" (change)="getSelectedTxt($event,'traderUserId')" [ngClass]="setFieldClasses('traderUserId')">
+                        <option [ngValue]="null" class="placeholder">Select</option>
+                        <option *ngFor="let option of fields.traderUserId.options" [value]="option.key">{{option.value}}</option>
+                    </select>
+                </div>
+                <div class="formGroup">
+                    <label>{{fields.contractType.label}}</label>
+                    <select class="form-control" formControlName="contractType" (change)="getSelectedTxt($event,'contractType')" [ngClass]="setFieldClasses('contractType')"  >
+                        <option [ngValue]="null" class="placeholder">Select</option>
+                        <option *ngFor="let option of fields.contractType.options" [value]="option.key">{{option.value}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="d-flex flex-wrap lbg">
+                <div class="formGroup position-relative">
+                    <label>{{fields.cpProfileId.label}}</label>
+                    <select class="form-control" formControlName="cpProfileId" (change)="getSelectedTxt($event,'cpProfileId'); addInterCompanyCpName($event);" [ngClass]="setFieldClasses('cpProfileId')">
+                        <option [ngValue]="null" class="placeholder">Select</option>
+                        <option *ngFor="let option of fields.cpProfileId.options" [value]="option.key">{{option.value}}</option>
+                    </select>
+                    <div *ngIf="getControl('cpProfileId').errors?.loading" class="select-loading">
+                        <span>loading</span>
+                        <div class="dependant-loader"></div>
+                    </div>
+                    <span class="cpAddress">{{cpAddress}}</span>
+                </div>
+                <div class="formGroup">
+                    <label>{{fields.paymentTermId.label}}</label>
+                    <select class="form-control" formControlName="paymentTermId" (change)="getSelectedTxt($event,'paymentTermId')" [ngClass]="setFieldClasses('paymentTermId')">
+                        <option [ngValue]="null" class="placeholder">Select</option>
+                        <option *ngFor="let option of fields.paymentTermId.options" [value]="option.key">{{option.value}}</option>
+                    </select>
+                </div>
+                <div class="formGroup">
+                    <label>{{fields.provisionalPaymentTermId.label}}</label>
+                    <select class="form-control" formControlName="provisionalPaymentTermId" (change)="getSelectedTxt($event,'provisionalPaymentTermId')" [ngClass]="setFieldClasses('provisionalPaymentTermId')">
+                        <option [ngValue]="null" class="placeholder">Select</option>
+                        <option *ngFor="let option of fields.provisionalPaymentTermId.options" [value]="option.key">{{option.value}}</option>
+                    </select>
+                </div>
+                <div class="formGroup">
+                    <label>{{fields.applicableLawId.label}}</label>
+                    <select class="form-control" formControlName="applicableLawId" (change)="getSelectedTxt($event,'applicableLawId')" [ngClass]="setFieldClasses('applicableLawId')">
+                        <option [ngValue]="null" class="placeholder">Select</option>
+                        <option *ngFor="let option of fields.applicableLawId.options" [value]="option.key">{{option.value}}</option>
+                    </select>
+                </div>
+                <div class="formGroup">
+                    <label>{{fields.arbitrationId.label}}</label>
+                    <select class="form-control" formControlName="arbitrationId" (change)="getSelectedTxt($event,'arbitrationId')" [ngClass]="setFieldClasses('arbitrationId')">
+                        <option [ngValue]="null" class="placeholder">Select</option>
+                        <option *ngFor="let option of fields.arbitrationId.options" [value]="option.key">{{option.value}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="d-flex flex-wrap">
+                <div class="formGroup">
+                    <label>{{fields.legalEntityId.label}}</label>
+                    <select class="form-control" formControlName="legalEntityId" (change)="getSelectedTxt($event,'legalEntityId')" [ngClass]="setFieldClasses('legalEntityId')">
+                        <option [ngValue]="null" class="placeholder">Select</option>
+                        <option *ngFor="let option of fields.legalEntityId.options" [value]="option.key">{{option.value}}</option>
+                    </select>
+                </div>
+                <div class="formGroup">
+                    <label>{{fields.incotermId.label}}</label>
+                    <select class="form-control" formControlName="incotermId" (change)="getSelectedTxt($event,'incotermId')" [ngClass]="setFieldClasses('incotermId')">
+                        <option [ngValue]="null" class="placeholder">Select</option>
+                        <option *ngFor="let option of fields.incotermId.options" [value]="option.key">{{option.value}}</option>
+                    </select>
+                </div>
+                <div class="formGroup">
+                    <label>{{fields.totalQtyUnitId.label}}</label>
+                    <select class="form-control" formControlName="totalQtyUnitId" (change)="getSelectedTxt($event,'totalQtyUnitId')" [ngClass]="setFieldClasses('totalQtyUnitId')">
+                        <option [ngValue]="null" class="placeholder">Select</option>
+                        <option *ngFor="let option of fields.totalQtyUnitId.options" [value]="option.key">{{option.value}}</option>
+                    </select>
+                </div>
+                <div class="formGroup">
+                    <label>{{fields.remark.label}}</label>
+                    <input class="form-control double-size" formControlName="remark" text="text" (change)="getSelectedTxt($event,'remark','text')">
+                </div>
+            </div>
+            <div *ngIf="getControl('dealType').value === 'Inter_Company' || getControl('dealType').value === 'Intra_Company'" class="d-flex flex-wrap">
+                <div *ngIf="getControl('dealType').value === 'Intra_Company'" class="formGroup position-relative">
+                    <label>{{fields.intraCompanyCPProfileId.label}}</label>
+                    <select class="form-control" formControlName="intraCompanyCPProfileId" (change)="getSelectedTxt($event,'intraCompanyCPProfileId')" [ngClass]="setFieldClasses('intraCompanyCPProfileId')">
+                        <option [ngValue]="null" class="placeholder">Select</option>
+                        <option *ngFor="let option of fields.intraCompanyCPProfileId.options" [value]="option.key">{{option.value}}</option>
+                    </select>
+                    <div *ngIf="getControl('cpProfileId').errors?.loading" class="select-loading">
+                        <span>loading</span>
+                        <div class="dependant-loader"></div>
+                    </div>
+                    <!-- <span class="cpAddress">{{cpAddress}}</span> -->
+                </div>
+                <div class="formGroup position-relative">
+                    <label>{{fields.intraCompanyTraderUserId.label}}</label>
+                    <select class="form-control" formControlName="intraCompanyTraderUserId" (change)="getSelectedTxt($event,'intraCompanyTraderUserId');" [ngClass]="setFieldClasses('intraCompanyTraderUserId')">
+                        <option [ngValue]="null" class="placeholder">Select</option>
+                        <option *ngFor="let option of fields.traderUserId.options" [value]="option.key">{{option.value}}</option>
+                    </select>
+                    <div *ngIf="getControl('traderUserId').errors?.loading" class="select-loading">
+                        <span>loading</span>
+                        <div class="dependant-loader"></div>
+                    </div>
+                </div>
+                <!-- <div class="formGroup">
+                    <label>{{fields.targetIncoTerm.label}}</label>
+                    <select class="form-control" formControlName="targetIncoTerm" (change)="getSelectedTxt($event,'targetIncoTerm')" [ngClass]="setFieldClasses('targetIncoTerm')">
+                        <option [ngValue]="null" class="placeholder">Select</option>
+                        <option *ngFor="let option of fields.targetIncoTerm.options" [value]="option.key">{{option.value}}</option>
+                    </select>
+                </div> -->
+                <div class="formGroup copy-secondary-cost">
+                    <input type="checkbox" formControlName="copySecondaryCost" class="checkbox d-inline-block"><span class="ml-checkBoxTxt">{{fields.copySecondaryCost.label}}</span>
+                </div>
+            </div>
+            <div *ngIf="appObject==='contract' && action==='edit'" class="d-flex flex-wrap">
+                <div class="formGroup">
+                    <label>{{fields.amendmentDate.label}}</label>
+                    <my-date-picker id="amendmentDate" type="date" title=" valid date format : DD-MMM-YYYY " class="mydate-picker one-field d-block" formControlName="amendmentDate"
+                        [options]="amendmentDateOptions" (dateChanged)="onDateChanged($event, 'amendmentDate');getSelectedTxt($event,'amendmentDate','date')"></my-date-picker>
+                </div>
+                <div class="formGroup">
+                    <label>{{fields.reasonToModify.label}}</label>
+                    <input type="text" class="form-control" formControlName="reasonToModify" [ngClass]="setFieldClasses('reasonToModify')">
+                </div>
+            </div>
+        </div>
+        <div>
+            <p-accordion (onOpen)="optionalFlagChanged(true)" (onClose)="optionalFlagChanged(false)">
+              <p-accordionTab [selected]="optionalEnabled()">
+                <p-header class="optional">
+                    <label class="italic">{{fields.optional.label}}<span class="optional-fields">{{fields.generalDetailsOptional.label}}</span></label>
+                </p-header>
+                <div class="d-flex flex-wrap">
+                    <div class="formGroup">
+                        <label>{{fields.prePaymentPct.label}}</label>
+                        <div class="multiInputField">
+                            <input type="number" min="0" class="form-control w-20 d-inline-block" [class.is-invalid]="validateField('prePaymentPct')" formControlName="prePaymentPct"> % within
+                            <input type="number" min="0" class="form-control w-20 d-inline-block" [class.is-invalid]="validateField('prePaymentDays')" formControlName="prePaymentDays">
+                            <span>{{fields.prePaymentDays.label}}</span>
+                        </div>
+                    </div>
+                    <div class="formGroup">
+                        <label>{{fields.qualityFinalizationPoint.label}}</label>
+                        <select class="form-control" formControlName="qualityFinalAt" (change)="getSelectedTxt($event,'qualityFinalAt')">
+                            <option [ngValue]="null" class="placeholder">Select</option>
+                            <option *ngFor="let option of fields.qualityFinalizationPoint.options" [value]="option.key">{{option.value}}</option>
+                        </select>
+                    </div>
+                    <div class="formGroup">
+                        <label>{{fields.weightFinalizationPoint.label}}</label>
+                        <select class="form-control" formControlName="weightFinalAt" (change)="getSelectedTxt($event,'weightFinalAt')">
+                            <option [ngValue]="null" class="placeholder">Select</option>
+                            <option *ngFor="let option of fields.weightFinalizationPoint.options" [value]="option.key">{{option.value}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="d-flex flex-wrap">
+                    <div class="formGroup">
+                        <label>{{fields.agentProfileId.label}}</label>
+                        <select class="form-control" formControlName="agentProfileId" (change)="getSelectedTxt($event,'agentProfileId')">
+                            <option [ngValue]="null" class="placeholder">Select</option>
+                            <option *ngFor="let option of fields.agentProfileId.options" [value]="option.key">{{option.value}}</option>
+                        </select>
+                    </div>
+                    <div class="formGroup">
+                        <label>{{fields.agentPersonInCharge.label}}</label>
+                        <select class="form-control" formControlName="agentPersonInCharge" (change)="getSelectedTxt($event,'agentPersonInCharge')">
+                            <option [ngValue]="null" class="placeholder">Select</option>
+                            <option *ngFor="let option of fields.agentPersonInCharge.options" [value]="option.key">{{option.value}}</option>
+                        </select>
+                        <div *ngIf="getControl('agentPersonInCharge').errors?.loading" class="select-loading optional-loading-pos">
+                            <span>loading</span>
+                            <div class="dependant-loader"></div>
+                        </div>
+                    </div>
+                    <div class="formGroup">
+                        <label>{{fields.agentRefNo.label}}</label>
+                        <input type="text" class="form-control" formControlName="agentRefNo" (change)="getSelectedTxt($event,'agentRefNo','text')">
+                    </div>
+                    <div class="formGroup">
+                        <label>{{fields.agentCommValue.label}}</label>
+                        <div class="multiInput">
+                            <input type="number" min="0" class="form-control d-inline-block two-field" [class.is-invalid]="validateField('agentCommValue')" formControlName="agentCommValue" (change)="getSelectedTxt($event,'agentCommValue','number')">
+                            <select class="form-control d-inline-block two-field" formControlName="agentCommPriceUnitId" (change)="getSelectedTxt($event,'agentCommPriceUnitId')">
+                                <option [ngValue]="null" class="placeholder">Select</option>
+                                <option *ngFor="let option of fields.agentCommPriceUnitId.options" [value]="option.key">{{option.value}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex flex-wrap lbg">
+                    <div class="formGroup">
+                        <label>{{fields.cpPersonInCharge.label}}</label>
+                        <select class="form-control" formControlName="cpPersonInCharge" (change)="getSelectedTxt($event,'cpPersonInCharge')">
+                            <option [ngValue]="null" class="placeholder">Select</option>
+                            <option *ngFor="let option of fields.cpPersonInCharge.options" [value]="option.key">{{option.value}}</option>
+                        </select>
+                        <div *ngIf="getControl('cpPersonInCharge').errors?.loading" class="select-loading optional-loading-pos">
+                            <span>loading</span>
+                            <div class="dependant-loader"></div>
+                        </div>
+                    </div>
+                    <div class="formGroup">
+                        <label>{{fields.cpRefNo.label}}</label>
+                        <input type="text" class="form-control" formControlName="cpRefNo" (change)="getSelectedTxt($event,'cpRefNo','text')">
+                    </div>
+                </div>
+              </p-accordionTab>
+            </p-accordion>
+        </div>
+    </div>
+    <!-- <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <button type="button" (click)="closeAlert()" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>        
+    </div> -->
+    <p *ngIf="handleAlert(showWarning)">
+        <ngb-alert type="danger" (close)="closeAlert(alert)">{{errorMsg}}</ngb-alert>
+    </p>
+    <app-confirm-popup #confirm (action)="afterDraftSave($event)" btn1="NEXT"></app-confirm-popup>
+    <app-confirm-popup #reqFailed title="Alert" btn1="OK"></app-confirm-popup>
+    <app-confirm-popup #confirmUseOfLastAutoSaveAlert (action)="afterConfirmedUseOfLastAutoSaveAlert($event)" title="Alert" btn1="CONTINUE LAST" btn2="NEW CONTRACT"></app-confirm-popup>
+</div>

@@ -1,0 +1,27 @@
+
+  .font-modify{
+    border: 0;
+    background: none;
+    &:focus{
+      outline: none;
+    }
+ }
+ 
+ .font-modify i.fa{
+   display: inline-block;
+   border-radius: 50px;
+   padding: 0.5em 0.6em;
+   color: #0e78f0;
+   border: 0.5px solid;
+ }
+
+ .label-size{
+   width: 60px;
+ }
+ .input-size{
+   width: 93px;
+   padding-right:0px;
+ }
+ .multiInput{
+   width: 260px;
+ }

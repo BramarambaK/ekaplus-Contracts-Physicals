@@ -1,0 +1,1 @@
+java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=1045 -jar .\build\libs\formula-price-consumer-3.26.0.jar

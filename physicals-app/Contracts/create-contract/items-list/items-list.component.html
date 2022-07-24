@@ -1,0 +1,232 @@
+<div class="item-list">
+  <div class="heading-container pr-4">
+    <span>
+      {{ fields.itemDetails.label }}
+      <span *ngIf="isEditContract()" class="contractRef">Contract Ref : {{contract?.contractRefNo}}</span>
+    </span>
+    <div class="link" (click)="addNewItem()">{{ fields.addItem.label }}</div>
+  </div>
+  <ng-container *ngIf="apiCalled">
+    <div class="blur"></div>
+    <div>
+      <div class="loader"></div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="tableLoading">
+    <div class="blur-table"></div>
+    <div>
+      <div class="loader-table"></div>
+    </div>
+  </ng-container>
+
+  <!-- HEADER SEARCH AND BUTTONS -->
+  <div class="p-2" *ngIf="!tableLoading">
+    <div class="row">
+      <div class="col-md-4">
+        <!-- <p class="h4">{{ title }}</p> -->
+      </div>
+      <div class="col-md-8 float-right">
+        <div class="row btn-toolbar justify-content-end pr-4">
+          <div>
+            <div class="input-group search-table">
+              <input class="form-control" placeholder="Search" pInputText size="20"
+                (input)="dt.filterGlobal($event.target.value, 'contains')" type="text" />
+              <div class="input-group-append">
+                <span class="input-group-text"><i class="fa fa-search"></i></span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="btn-group filters-table pr-3" role="group" aria-label="First group">
+              <div ngbDropdown placement="bottom-right" class="d-inline-block" *ngIf="header.length > 0">
+                <button class="btn btn-primary" ngbDropdownToggle>
+                  <i class="fa fa-cog"></i>
+                </button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1" class="mr-2">
+                  <p-multiSelect [options]="header" [(ngModel)]="columsSelected" optionLabel="header"
+                    selectedItemsLabel="{0} columns selected" [style]="{ minWidth: '200px' }"
+                    defaultLabel="Choose Columns" (onClick)="columnFilterDropdownClick($event)"></p-multiSelect>
+                </div>
+              </div>
+              <div>
+                <label class="btn btn-primary" ngbButtonLabel>
+                  <input type="checkbox" ngbButton [(ngModel)]="filter" />
+                  <i class="fa fa-filter" aria-hidden="true"></i>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div ngbDropdown class="d-inline-block">
+            <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Operations</button>
+            <div ngbDropdownMenu aria-labelledby="dropdownBasic1" class="dropdownActions">
+              <div ngbDropdownItem aria-labelledby="dropdownManual">
+                <button ngbDropdownItem type="button" class="btn" (click)="editRecord()">
+                  Edit
+                </button>
+                <button ngbDropdownItem type="button" class="btn" (click)="copyItem()">
+                  Copy
+                </button>
+                <button *ngIf="!gmrExistsForSelectedItem" ngbDropdownItem type="button" class="btn" (click)="deleteItem()">
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- [frozenColumns]="frozenCols" frozenWidth="100px" -->
+    <p-table #dt [columns]="columsSelected" [value]="records" [paginator]="true" [rows]="30" sortMode="multiple"
+      selectionMode="single" [scrollable]="true" [style]="{width:'calc(100vw - 245px)'}"
+      scrollHeight="calc(100vh - 330px)" [autoLayout]="true" [resizableColumns]="resize" [reorderableColumns]="reorder">
+      <ng-template pTemplate="colgroup" let-columns>
+        <colgroup>
+          <col *ngFor="let col of columns" [style.width.px]="col.width" />
+          <col style="width:100px" />
+        </colgroup>
+      </ng-template>
+      <ng-template pTemplate="header" let-columns>
+        <tr *ngIf="!filter">
+          <th>
+            Select
+          </th>
+          <th title=" {{ h.header }}" *ngFor="let h of columns" pResizableColumn pReorderableColumn
+            [pSortableColumn]="isSort(h) ? h.field : null" class="tablerowellipse">
+            {{ h.header }}
+            <p-sortIcon [field]="h.field" *ngIf="isSort(h)"></p-sortIcon>
+          </th>
+          <th *ngIf="isRowAction">Actions</th>
+        </tr>
+        <tr *ngIf="filter">
+          <th>
+            Select
+          </th>
+          <th *ngFor="let h of columns" class="tablerowellipse">
+            <p-multiSelect appendTo="body" *ngIf="isFilter(h)" [options]="filter_distinct(records, h.field)"
+              defaultLabel="{{ displayHeader(h.header) }}" (onChange)="dt.filter($event.value, h.field, 'in')"
+              autoWidth="false"></p-multiSelect>
+            <span *ngIf="h.filter">{{ h.header }}</span>
+          </th>
+          <th *ngIf="isRowAction">
+            Actions
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-record let-columns="columns" let-rowIndex="rowIndex">
+        <!-- [pSelectableRow]="record" [pSelectableRowIndex]="rowIndex" -->
+        <tr *ngIf="record.isDeleted !== true">
+          <td abbr="Action" class="action pd5">
+            <p-checkbox binary="true" (onChange)="pr(record,rowIndex)" [(ngModel)]="rowSelected[rowIndex]">
+            </p-checkbox>
+          </td>
+          <td *ngFor="let h of columns" [ngClass]="
+              h.highlight
+                ? h.highlight[record[h.field]] || h.highlight.default
+                : ''
+            ">
+            <!-- (ngModelChange)="editMinMax($event)" [ngModelOptions]="{updateOn: 'blur'}"
+                    (blur)="editMinMax(record)"
+                    (keydown.enter)="editMinMax(record)" -->
+            <div *ngIf="h.edit === true; else default" pEditableColumn>
+              <p-cellEditor>
+                <ng-template pTemplate="input" *ngIf="h.field === 'itemQty'">
+                  <input pInputText class="editTextInput" type="text" [(ngModel)]="record.itemQtyNum" (change)="
+                      editMinMax($event.target.value, record.itemNo, rowIndex, $event)
+                    " (keydown.enter)="
+                      editMinMax($event.target.value, record.itemNo, rowIndex, $event)
+                    " />
+                  <span class="nonEditText">{{ record.itemQtyUnitId }}</span>
+                </ng-template>
+                <ng-template pTemplate="input" *ngIf="h.field === 'deliveryPeriod'">
+                  <my-date-picker type="date" appendTo="body" class="mydate-picker deliveryFromDate d-inline-block"
+                    [(ngModel)]="record.delFromDate" [options]="deliveryFromDateOptions" (dateChanged)="
+                      editFromDate($event.formatted, record.itemNo, rowIndex)
+                    " (keydown.enter)="
+                      editFromDate($event.target?.value, record.itemNo, rowIndex)"
+                      (inputFocusBlur)="editFromDate($event?.value, record.itemNo, rowIndex)" 
+                      (calendarToggle)="onCalendarToggle($event, rowIndex)"
+                    >       
+                  </my-date-picker><span class="dash"> - </span>
+                  <my-date-picker type="date" class="mydate-picker deliveryToDate d-inline-block"
+                    [(ngModel)]="record.delToDate" [options]="record.deliveryToDateOptions" (dateChanged)="
+                      editToDate($event.formatted, record.itemNo, rowIndex)
+                    " (keydown.enter)="
+                      editToDate($event.target?.value, record.itemNo, rowIndex)"
+                      (inputFocusBlur)="editToDate($event?.value, record.itemNo, rowIndex)"
+                    >
+                  </my-date-picker>
+                </ng-template>
+                <ng-template pTemplate="output">
+                    {{ record[h.field] }} 
+                </ng-template>
+              </p-cellEditor>
+            </div>
+            <ng-template #default> 
+              <span *ngIf="record[h.field] !== '...' else loadingCell">
+                {{ record[h.field] }} 
+              </span>
+            </ng-template>
+            <ng-template #loadingCell>
+              <div class="table-loader"></div>
+            </ng-template>  
+          </td>
+
+        </tr>
+      </ng-template>
+    </p-table>
+    <p *ngIf="showWarning">
+      <ngb-alert (close)="closeAlert(alert)">{{ errorMsg }}</ngb-alert>
+    </p>
+    <p *ngIf="handleAlert(showError)">
+      <ngb-alert type="danger" (close)="closeAlert(alert)">{{errorMsg}}</ngb-alert>
+    </p>
+  </div>
+
+  <!-- popups -->
+  <p-confirmDialog #cd header="Confirmation" icon="pi pi-exclamation-triangle">
+    <p-footer>
+      <button type="button" pButton label="Create Contract" (click)="cd.accept()"></button>
+      <button type="button" pButton label="Save as draft" (click)="cd.reject()"></button>
+    </p-footer>
+  </p-confirmDialog>
+
+  <app-approve-contract-popup (action)="afterApprovalPopupCreateContract($event)"
+    (cancelApproval)="afterApprovalCancel()"></app-approve-contract-popup>
+
+  <app-confirm-popup #confirm btn1="OK"></app-confirm-popup>
+  <app-confirm-popup
+    #contractCreated
+    btn1="OK"
+    (action)="afterContractCreated()"
+    actOnClose="true"
+  ></app-confirm-popup>
+  <app-confirm-popup
+    #draftCreated
+    btn1="CONTINUE CONTRACT"
+    btn2="EXIT TO DRAFT LISTING"
+    (action)="afterDraftCreated($event)"
+  ></app-confirm-popup>
+  <app-confirm-popup
+    #contractDraftPopup
+    title="Confirmation"
+    body="Do you want to create contract with 1 item or save as draft?"
+    btn1="SAVE AS CONTRACT"
+    btn2="SAVE AS DRAFT"
+    (action)="confirmSaveContractOrDraft($event)"
+  ></app-confirm-popup>
+  <app-confirm-popup
+    #updateContractPopup
+    btn2="CONTINUE CONTRACT"
+    btn1="EXIT TO LISTING"
+    (action)="afterUpdate($event,'contract')"
+  ></app-confirm-popup>
+  <app-confirm-popup
+    #updateTemplatePopup
+    btn2="CONTINUE TEMPLATE"
+    btn1="EXIT TO LISTING"
+    (action)="afterUpdate($event,'template')"
+  ></app-confirm-popup>
+  <app-confirm-popup #reqFailed title="Alert" btn1="OK"></app-confirm-popup>
+</div>

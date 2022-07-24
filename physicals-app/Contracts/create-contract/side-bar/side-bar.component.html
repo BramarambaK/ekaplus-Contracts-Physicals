@@ -1,0 +1,54 @@
+<div class="side-bar"> 
+  <div *ngIf="!view" class="fix">
+    <nav>
+      <circle-progress class="circle-progress" [percent]="gen" [showTitle]="false" [showSubtitle]="false" [showUnits]="false"></circle-progress>
+      <ng-container *ngIf="gen < 100; else done">
+        <i class="material-icons">{{ genLink.isActive ? 'play_arrow' : 'stop'}}</i>
+      </ng-container>
+      <a [routerLink]="['general-details',id]" routerLinkActive="font-weight-bold" #genLink="routerLinkActive">General
+        Details</a>
+    </nav>
+    <nav *ngIf="itd < 100" [ngClass]="newItem ? 'new-item-included' : null">
+      <circle-progress class="circle-progress" [percent]="itd" [showTitle]="false" [showSubtitle]="false" [showUnits]="false"></circle-progress>
+      <ng-container *ngIf="itd < 100; else done">
+        <i class="material-icons">{{ itdLink.isActive ? 'play_arrow' : 'stop'}}</i>
+      </ng-container>
+      <a [routerLink]="['item-details',id,itemNo]" [queryParams]="newItem ? {newItem: true} : null " routerLinkActive="font-weight-bold" #itdLink="routerLinkActive">Item
+        Details</a>
+      <div *ngIf="newItem" class="new-item">
+        <i class="material-icons play">play_arrow</i> New Item
+      </div>
+    </nav>
+    <nav *ngIf="itd === 100">
+      <circle-progress class="circle-progress" [percent]=100 [showTitle]="false" [showSubtitle]="false" [showUnits]="false"></circle-progress>
+      <ng-container *ngTemplateOutlet="done"></ng-container>
+      <a [routerLink]="['item-list',id]" routerLinkActive="font-weight-bold" [ngClass]="itemDetailsScreen ? 'disabled link' : null" #itdLink="routerLinkActive">Item Details
+      </a>
+    </nav>
+    <nav>
+      <circle-progress class="circle-progress" [percent]="docUploadPercent" [showTitle]="false" [showSubtitle]="false" [showUnits]="false"></circle-progress>
+      <ng-container *ngIf="docUploadPercent < 100; else done">
+        <i class="material-icons">{{ docuLink.isActive ? 'play_arrow' : 'stop'}}</i>
+      </ng-container>
+      <a [routerLink]="['document-upload',id]" routerLinkActive="font-weight-bold" [ngClass]=" !edit ? 'disabled' : null " #docuLink="routerLinkActive">Document
+        Upload</a>
+    </nav>
+  </div>
+  <div *ngIf="view" class="fix">
+    <nav>
+      <a [routerLink]="['general-details',id]" routerLinkActive="font-weight-bold">General Details</a>
+    </nav>
+    <nav>
+      <a [routerLink]="['item-list',id]" routerLinkActive="font-weight-bold">Item Details</a>
+    </nav>
+    <nav>
+      <a [routerLink]="['document-upload',id]" routerLinkActive="font-weight-bold">Document Upload</a>
+    </nav>
+    <!-- <nav>
+      <span class="printLink" (click)="navigateToPrint()">Printable Contract</span>
+    </nav> -->
+  </div>
+</div>
+<ng-template #done>
+  <i class="material-icons tick">check_circle_outline</i>
+</ng-template>

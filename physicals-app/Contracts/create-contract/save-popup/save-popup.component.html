@@ -1,0 +1,34 @@
+<ng-template #content let-modal>
+   <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Save Contract</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+         <span aria-hidden="true">&times;</span>
+      </button>
+   </div>
+   <div class="modal-body">
+         <button type="button" class="btn btn-success" (click)="modal.close('create contract')">CREATE CONTRACT</button>
+         <button type="button" class="btn btn-success" (click)="modal.close('save as draft')">SAVE AS DRAFT</button>
+   </div>
+   <!-- <div class="modal-footer">
+      <button type="button" class="btn btn-success" (click)="modal.dismiss('use formula click')">USE FORMULA</button>
+   </div> -->
+</ng-template>
+
+<ng-template #approve let-modal>
+   <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Contract Approval</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+         <span aria-hidden="true">&times;</span>
+      </button>
+   </div>
+   <div class="modal-body">
+      <div></div>
+      <div></div>
+   </div>
+   <div class="modal-footer">
+      <button type="button" class="btn btn-success" (click)="modal.dismiss('use formula click')">USE FORMULA</button>
+   </div>
+</ng-template>
+
+
+<button class="btn btn-success" (click)="open(content)">SAVE</button>

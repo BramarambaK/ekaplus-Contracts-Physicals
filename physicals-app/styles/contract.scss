@@ -1,0 +1,132 @@
+.loader {
+    border: 8px solid #fff;
+    border-top: 8px solid #3498db;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+    position: fixed;
+    top: calc(50vh - 40px);
+    left: calc(50vw - 40px);
+    transform: translate(-50%, -50%);
+    z-index: 2;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .init-blur{
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    z-index: 1;
+    background: #fff;
+  }
+  
+  .init-loader{
+    border: 8px solid #fff;
+    border-top: 8px solid #3498db;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+    position: absolute;
+    top: calc(50% - 40px);
+    left: calc(50% - 40px);
+    z-index: 2;
+  }
+
+  .select-loading{
+    position: absolute;
+    top: 37px;
+    right: 15px;
+    width: 88%;
+    padding: 3px;
+    font-style: italic;
+    font-size: 12px;
+    color: #aeaeae;
+    background: #fff;
+  }  
+  
+  .select-loading-id{
+    position: absolute;
+    top: 41px;
+    right: 15px;
+    width: 88%;
+    padding: 3px;
+    font-style: italic;
+    font-size: 12px;
+    color: #aeaeae;
+    background: #fff;
+  }
+  
+  .select-loading-multi{
+    position: absolute;
+    top: 41px;
+    right: 21px;
+    width: 42%;
+    padding: 3px;
+    font-style: italic;
+    font-size: 12px;
+    color: #aeaeae;
+    background: #fff;
+  }  
+
+  .select-loading-multi-first{
+    position: absolute;
+    top: 41px;
+    left: 15px;
+    width: 57%;
+    padding: 3px;
+    font-style: italic;
+    font-size: 12px;
+    color: #aeaeae;
+    background: #fff;
+  }
+
+  .dependant-loader{
+    position: absolute;
+    top: 1px;
+    right: 4px;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #3498db;
+    border-top: 2px solid #fff;
+    background: #fff;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    animation: spin 2s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .contractRef{
+    font-size: 12px;
+    font-weight: bold;
+    border-left: 1px solid #aaa;
+    margin-left: 10px;
+    padding-left: 10px;
+  }
+  
+  .table-loader{
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    width: 15px;
+    height: 15px;
+    border: 2px solid #3498db;
+    border-top: 2px solid #fff;
+    background: #fff;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    animation: spin 2s linear infinite;
+  }

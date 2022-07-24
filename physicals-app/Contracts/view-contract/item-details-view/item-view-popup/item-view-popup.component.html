@@ -1,0 +1,75 @@
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <div class="modal-title" id="modal-basic-title">Item - <span *ngIf="!loading">{{item.itemNo}}</span></div>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div *ngIf="!loading">
+      <div class="font-weight-bold">Mandatory Fields</div>
+      <div class="d-flex j-con">
+        <table class="w-50">
+          <tr *ngFor="let data of mandatoryFieldsCol1View; index as i">
+            <td>{{data.label}}</td>
+            <td>{{data.value}}</td>
+          </tr>
+          <tr *ngFor="let data of pricingFieldsView; index as i">
+            <td>{{data.label}}</td>
+            <td>{{data.value}}</td>
+          </tr>
+        </table>
+        <div class="flex-i">
+          <table>
+            <tr *ngFor="let data of mandatoryFieldsCol2View; index as i">
+              <td>{{data.label}}</td>
+              <td>{{data.value}}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="font-weight-bold mt-4">Optional Fields</div>
+      <div class="d-flex j-con">
+        <table class="w-50">
+          <tr *ngFor="let data of optionalFieldsCol1View; index as i">
+            <td>{{data.label}}</td>
+            <td>{{data.value}}</td>
+          </tr>
+        </table>
+        <div class="flex-i">
+          <table>
+            <tr *ngFor="let data of optionalFieldsCol2View; index as i">
+              <td>{{data.label}}</td>
+              <td>{{data.value}}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div *ngIf="secondaryCostPresent()">
+        <div class="secondary-cost">{{fields.secondaryCost.label}}</div>
+        <table class="table">
+          <tr>
+            <th *ngFor="let field of secondaryCostHeaderList">{{field}}</th>
+          </tr>
+          <tr *ngFor="let secondaryCost of secondaryCostFieldsView">
+            <td *ngFor="let field of secondaryCost">{{field.value}}</td>
+          </tr>
+        </table>
+      </div>
+      <div *ngIf="addDedPresent()">
+        <div class="secondary-cost">{{fields.additionsDeductions.label}}</div>
+        <table class="table">
+          <tr>
+            <th *ngFor="let field of addDedHeaderList">{{field}}</th>
+          </tr>
+          <tr *ngFor="let addDed of addDedFieldsView">
+            <td *ngFor="let field of addDed">{{field.value}}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div *ngIf="loading">
+       loading
+    </div>
+  </div>
+</ng-template>

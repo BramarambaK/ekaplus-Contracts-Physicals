@@ -1,0 +1,77 @@
+.modal-header{
+    padding: 10px;
+    border-radius: 0;
+    font-size: 16px;
+}
+
+.modal-body{
+    padding: 10px;
+    padding-bottom: 50px;
+    margin-bottom: 50px;
+}
+
+.modal-footer{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    border-top: 1px solid #e4e7ea;
+    padding: 10px;
+}
+
+.select{
+    display: inline-block;
+    width: 150px;
+}
+
+.close{
+    outline: none;
+}
+
+.pr-6{
+  padding-right: 60px;
+}
+
+td{
+    width: 400px;
+}
+
+.loader {
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #3498db;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+    position: relative;
+    top: 40px;
+    z-index: 2;
+}
+
+.approvers{
+    font-size: 13px;
+}
+
+table{
+    tr:nth-child(1){
+        height: 40px;
+    }
+    tr:nth-child(2){
+        height: 30px;
+    }
+    select{
+        height: 30px;
+    }
+}
+
+.border-red{
+    border: 1px solid red;
+}
+
+.approve-warning{
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}

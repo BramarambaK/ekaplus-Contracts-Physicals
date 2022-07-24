@@ -1,0 +1,20 @@
+<ng-template #content let-modal>
+   <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Enter Contract Details</h4>
+      <button type="button" style="outline: none" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+         <span aria-hidden="true">&times;</span>
+      </button>
+   </div>
+   <div class="modal-body">
+         <p>Examples:</p>
+         <p>admin admin create sale contract for 200 MT cotton from Margret with at flat price of 120 USD at tolerance 2 % buyer through container from Australia to China, pay after 21 days, apply AFSA and GDPR</p>
+         <p>Buy 200 MT cotton with at flat price of 120 USD at tolerance 2 % buyer through container from Australia to China</p>
+         <textarea rows="4" cols="50" #textInput autofocus (keydown.enter)="onKeydown($event,textInput.value,modal)"></textarea>
+   </div>
+   <div class="modal-footer">
+      <button type="button" class="btn btn-success" (click)="takeAction(textInput.value,modal)">ADD</button>
+   </div>
+</ng-template>
+
+
+<span class="keyboard-icon" (click)="open(content)"><i class="material-icons">keyboard</i></span>

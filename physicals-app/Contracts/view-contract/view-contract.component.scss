@@ -1,0 +1,39 @@
+.contract-container{
+    height: calc(100vh - 100px);
+    overflow: auto;
+    display: grid;
+    grid-template-columns: 170px auto;
+    .outer-side-bar{
+        background: #9bc5e654;
+        ::ng-deep .side-bar > .fix{
+            width: 170px;
+            nav > a {
+                    color: #000;
+                    position: absolute;
+                    top: 17px;
+                    left: 30px;
+            }
+        }
+    }
+    .contract-main{
+        margin: 5px;
+        border: 1px solid lightgrey;
+        max-height: calc(100vh - 115px);
+        overflow: auto;
+    }
+    .bottom-bar{
+        position: fixed;
+        bottom: 0;
+        width: 94%;
+        display: flex;
+        justify-content: space-between;
+        border-top: 2px solid #ccc;
+        background: white;
+        padding: 10px
+    }
+    .btn{
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+    }
+}

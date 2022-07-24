@@ -1,0 +1,67 @@
+db.getCollection('app').insert({
+    "_id" : "1110001"
+    "title" : "Physcials-Contract",
+    "name" : "physicals",
+    "tenantID" : "",
+    "ObjectMetaIds" : [ 
+        "5be3e1a98fce6a0f9c12c220", 
+        ""
+    ],
+    "version" : "2",
+    "createdOn" : "Test",
+    "createdBy" : "Test",
+    "lastModifiedOn" : "Test",
+    "lastModifiedBy" : "Test",
+    "type" : "app",
+    "config" : {
+        "header" : {
+            "brand" : {
+                "src" : "assets/img/brand/eka-login-logo.png",
+                "width" : 60,
+                "height" : 20,
+                "alt" : "Eka"
+            },
+            "clientLogo" : {
+                "src" : "assets/img/brand/boliden-logo.svg",
+                "width" : 30,
+                "height" : 10,
+                "alt" : "Boliden"
+            },
+            "sidebarToggler" : "lg",
+            "asideMenuToggler" : "lg"
+        },
+        "sidebar" : {
+            "fixed" : true,
+            "display" : false
+        },
+        "navbar" : [ 
+            {
+                "name" : "App Home",
+                "url" : "/dashboard",
+                "icon" : "icon-speedometer",
+                "badge" : {
+                    "variant" : "info",
+                    "text" : "NEW"
+                }
+            }, 
+            {
+                "name" : "Contracts",
+                "url" : "/physicals",
+                "icon" : "icon-speedometer",
+                "badge" : {
+                    "variant" : "info"
+                }
+            }, 
+            {
+                "divider" : true
+            }
+        ],
+        "aside" : {
+            "fixed" : true,
+            "display" : false
+        }
+    }
+})//;
+
+--//@UNDO
+db.getCollection('app').remove({_id:'1110001'})//;

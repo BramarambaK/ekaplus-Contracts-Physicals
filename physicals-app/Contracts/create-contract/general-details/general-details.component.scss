@@ -1,0 +1,171 @@
+@import '../../../styles/contract';
+@import '../../../styles/accordian';
+
+.header{
+    padding: 8px 10px;
+    border: 1px solid lightgrey;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+}
+
+.body{
+    border-left: 1px solid #f5f8f9;
+    border-right: 1px solid #f5f8f9;
+}
+
+label{
+    margin-bottom: 0.25rem;
+}
+
+.form{
+    font-size: 13px;
+    select, input{
+        font-size: 13px;
+        padding: 4px;
+    }
+}
+
+
+
+.double-size{
+    width: 480px;
+}
+
+.formGroup{
+    padding: 10px;
+    height: 80px;
+    position: relative;
+}
+
+.holder{
+    margin: 7.5px;
+    border: 1px solid #f1f1f1;
+    border-radius: 3px;
+    background: #fafafa;
+}
+.optional{
+    color: #333333;
+    label{
+        font-weight: 400;
+        cursor: pointer;
+    }
+    .optional-fields{
+        font-size: 13px;
+        font-style: italic;
+        padding: 5px;
+        color: grey !important;
+    }
+}
+
+.check{
+    position: relative;
+    top: 3px;
+    margin: 0 8px 0 1px;
+}
+
+.multiInput{
+    //width: 230px;
+    .w-60{
+        width: 130px;
+    }
+    .w-40{
+        width: 80px;
+    }
+}
+
+.lbg{
+    background: #fff;
+}
+  
+  .blur{
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1;
+    background: #00000075;
+  }
+
+  .is-invalid-date{
+    .mydp, .mydp .headertodaybtn {
+        border: 1px solid #d0c0c0;
+    }
+  }
+
+  .alert{
+    position: fixed;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+    border: 1px solid red;
+    font-size: 15px;
+    color: red;
+    border-radius: 0.5rem;
+    z-index: 15;
+    top: 55px;
+    left: 0;
+    width: 40vw;
+    margin: 0 30vw;
+    text-align: center;
+  }
+
+  .recommendation{
+    background: #ffff0021;
+  }
+
+  .rec-popup{
+    height: 10px;
+    position: relative;
+    bottom: 3px;
+  }
+
+  .txtToContract{
+      background: #90ee9066;
+  }
+  .form-control {
+    width: 240px;
+    height: 30px !important;
+  }
+
+  .cpAddress{
+    position: absolute;
+    font-size: 9.5px;
+    font-weight: 100;
+    font-style: italic;
+    color: #616161;
+    padding: 2px 0 0 5px;
+    width: 235px;
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    word-spacing: 2px;
+  }
+
+  .multiInputField {
+    width: 230px;
+  }
+
+  .w-20 {
+    width: 20%;
+  }
+
+  .optional-loading-pos{
+    top: 33px !important;
+  }
+
+  .copy-secondary-cost {
+    input{
+      position: relative;
+      top: 30px;
+      left: 2px;
+    }
+    span{
+      position: relative;
+      top: 28px;
+      display: inline-block;
+      margin-left: 5px;
+    }
+  }

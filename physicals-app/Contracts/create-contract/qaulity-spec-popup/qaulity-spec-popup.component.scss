@@ -1,0 +1,109 @@
+@import '../../../styles/contract';
+
+.modal-content {
+ width: 90%;
+}
+.modal-header{
+  padding: 10px;
+}
+.modal-body{
+  padding: 15px 10px;
+}
+.modal-footer{
+  padding: 5px !important;
+}
+
+table {
+  border-collapse:separate;
+  margin: 0;
+}
+
+td, th {
+  padding: 10px;
+}
+
+thead {
+  border: none;
+  td {
+    font-weight: 600;
+    border: none;
+    padding: 0;
+    padding-left: 7px;
+  }
+}
+
+tbody {
+  td {
+    font-size: 13px;
+    padding: 5px;
+    border: none;
+  }
+}
+
+td:first-child, th:first-child {
+   border-left: none;
+}
+
+input{
+  width: 120px;
+  height: 32px;
+  padding: 2px;
+  margin-right: -3px;
+}
+
+select{
+  width: 120px;
+  height: 32px;
+  padding: 0;
+  margin: 0 2px;
+  display: inline-block;
+}
+
+p{
+  margin-top: 5px;
+  margin-bottom: -16px;
+}
+
+.checkbox{
+  width: 15px;
+  position: relative;
+  top: 10px;
+  left: 10px;
+}
+
+span.ml-checkBoxTxt{
+  margin-left: 20px;
+}
+
+.select-loading{
+  position: absolute;
+  padding: 5px;
+  top: 3.5px;
+  left: 6px;
+  width: 112px;
+  font-style: italic;
+  font-size: 12px;
+  color: #aeaeae;
+  background: #fff;
+}
+
+.relative{
+  position: relative;
+}
+
+.disableDensityFields{
+  margin-left: 10px;
+  margin-bottom: 10px;
+  color: red;
+  font-weight: 600;
+}
+
+.delete{
+  &:hover{
+    cursor: pointer;
+  }
+  font-size: 18px;
+  position: relative;
+  top: 5px;
+  color: darkslategrey;
+}

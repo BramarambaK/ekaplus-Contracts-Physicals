@@ -1,0 +1,70 @@
+<ng-template #content let-modal style="width: 95vw">
+  <div class="modal-header">
+    <div class="modal-title" id="modal-basic-title">Density@15&#8451;/60&#8457;</div>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" [formGroup]="contractQualityForm">
+    <div *ngIf="disableDensityFields" class="disableDensityFields">Density cannot be entered as GMR is already created</div>
+    <table class="table">
+      <thead>
+        <tr>
+          <!-- <td>Name</td>
+          <td>Value</td>
+          <td>Unit</td> -->
+          <td>Value</td>
+          <td>Mass Unit / Volume Unit</td>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- <tr *ngFor="let qual of quality">
+          <td>{{ qual.attributeName }}</td>
+          <td>{{ qual.attributeValue }}</td>
+          <td>{{ qual.attributeUnitName }} ({{qual.attributeUnitType}})</td>
+        </tr> -->
+        <tr>
+          <td><input type="number" min="0.00000001" class="form-control" formControlName="densityFactor" [ngClass]="setFieldClasses('densityFactor')"></td>
+          <td style="display:flex">
+            <div class="relative">
+              <select class="form-control" formControlName="densityMassQtyUnitId" [ngClass]="setFieldClasses('densityMassQtyUnitId')">
+                <option [ngValue]="null" class="placeholder">Select</option>
+                <option *ngFor="let option of fields.densityMassQtyUnitId.options" [value]="option.key">
+                  {{option.value}}
+                </option>
+              </select>
+              <div  class="select-loading" *ngIf="loading">
+                <span>loading</span>
+                <div class="dependant-loader"></div>
+              </div>
+            </div>
+            <div class="relative">
+              <select class="form-control" formControlName="densityVolumeQtyUnitId" [ngClass]="setFieldClasses('densityVolumeQtyUnitId')">
+                <option [ngValue]="null" class="placeholder">Select</option>
+                <option *ngFor="let option of fields.densityVolumeQtyUnitId.options" [value]="option.key">
+                  {{option.value}}
+                </option>
+              </select>
+              <div  class="select-loading" *ngIf="loading">
+                <span>loading</span>
+                <div class="dependant-loader"></div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <i class="material-icons delete" title="Delete" (click)="deleteDensity()">delete</i>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p *ngIf="handleAlert(showWarning)">
+      <ngb-alert type="danger" (close)="closeAlert(alert)">{{errorMsg}}</ngb-alert>
+    </p>
+  </div>
+  <div class="modal-footer justify-content-between">
+    <button type="button" class="btn btn-outline-dark" (click)="cancel(modal)">{{fields.cancelBtn.label}}</button>
+    <button type="button" class="btn btn-primary" (click)="saveContractQualityDensity(modal)">{{fields.saveBtn.label}}</button>
+  </div>
+</ng-template>
+
+<span (click)="open(content)">Density</span>

@@ -1,0 +1,48 @@
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Pricing</h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <!-- <div class="modal-body"> -->
+
+  <div *ngIf="!index" class="px-2">
+    <pricing
+      [fromPricing]="false"
+      [indexPricing]="false"
+      [outerModal]="modal"
+      [contractDetails]="contractDetails"
+    ></pricing>
+  </div>
+  <div *ngIf="index">
+    <app-formula-form
+      [fromPricing]="false"
+      [indexPricing]="true"
+      [outerModal]="modal"
+      [contractDetails]="contractDetails"
+    ></app-formula-form>
+  </div>
+  <!-- </div> -->
+  <!-- <div class="modal-footer">
+       <button type="button" class="btn btn-success" (click)="modal.dismiss('use formula click')">USE FORMULA</button>
+    </div> -->
+</ng-template>
+
+<div
+  class="form-control formula"
+  [ngStyle]="currentStyles"
+  (click)="open(content)"
+  type="text"
+>
+  <span>{{ formula }}</span>
+  <i *ngIf="formula" class="fas fa-times-circle icon"></i>
+  <div>
+    <!-- [style.background-color]="formula ? '#eee': '#fff'" -->
+  </div>
+</div>

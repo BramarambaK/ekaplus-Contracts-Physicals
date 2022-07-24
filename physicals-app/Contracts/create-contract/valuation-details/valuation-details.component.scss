@@ -1,0 +1,72 @@
+.popup-link{
+    color: dodgerblue;
+    font-size: 14px;
+    font-weight: 500;
+    padding-left: 4px;
+    cursor: pointer;
+}
+
+.form-control.formula{
+    width: 240px;
+    height: 30px !important;
+    cursor: pointer;
+    position: relative;
+    span{
+        position: relative;
+        top: -2px;
+    }
+    .icon{
+        position: absolute;
+        right: 4px;
+        top: 3px;
+    }
+}
+
+table{
+    width: 100%;
+}
+
+td{
+    padding: 0.25rem;
+}
+
+th{
+    width: 13%;
+    font-weight: 500;
+}
+
+i{
+    font-size: 15px;
+    margin: 2.5px;
+    cursor: pointer;
+}
+
+.addItem{
+    display: flex;
+    flex-direction: row-reverse;
+    color: dodgerblue;
+    font-weight: 500;
+    margin: 10px;
+    cursor: pointer;
+}
+
+select{
+    padding: 0;
+    min-width: 90px;
+}
+
+.action{
+    width: 60px;
+    i{
+        border: 1px solid grey;
+        border-radius: 50%;
+        font-size: 16px;
+        margin: 5px;
+        color: grey;
+        &:hover{
+            color: dodgerblue;
+            border-color: dodgerblue;
+            cursor: pointer;
+        }
+    }
+}

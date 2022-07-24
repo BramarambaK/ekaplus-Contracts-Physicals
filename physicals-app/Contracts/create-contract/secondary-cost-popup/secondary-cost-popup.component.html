@@ -1,0 +1,110 @@
+<ng-template #content let-modal style="width: 95vw">
+   <div class="modal-header">
+      <div class="modal-title" id="modal-basic-title">{{fields.secondaryCost.label}}</div>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+         <span aria-hidden="true">&times;</span>
+      </button>
+   </div>
+   <div class="modal-body">
+      <p *ngIf="handleAlert(showWarning)" class="warning-popup-wrapper">
+         <ngb-alert (close)="closeAlert(alert)" class="warning-popup">{{errorMsg}}</ngb-alert>
+      </p>
+      <p *ngIf="!itemCheckPass" class="itemCheckMsg">
+         Enter values for Item Quantity, Item Quantity Unit and PayInCurrency before adding Secondary Cost
+      </p>
+      <div *ngIf="itemCheckPass" class="wrapper">
+         <div *ngIf="!loadingComplete" class="loader-container">
+            <div class="loader"></div>
+         </div>
+         <table class="table table-striped" *ngIf="loadingComplete">
+            <div *ngIf="showAddCost">
+               <div class="link" (click)="addCost()">+ Add Cost</div>
+            </div>
+            <div *ngIf="!showAddCost" [formGroup]="secondaryCostForm" class="scData">
+               <div class="p-1">New Cost</div>
+               <div class="scDropdowns">
+                  <td *ngFor="let item of secondaryCostTableHeaders; index as i">
+                     <div class="heading">{{item.label}}</div>
+                     <div>
+                        <select class="form-control" *ngIf="item.type === 'dropdown'" name="" id=""
+                           [formControlName]="item.scGroup" [class.is-invalid]="validateField(item.scGroup)">
+                           <option [ngValue]="null" class="placeholder">Select</option>
+                           <option *ngFor="let option of item.options" [value]="option.key">{{option.value}}</option>
+                        </select>
+                        <span *ngIf="item.type === 'inputText'">
+                           <input class="form-control" [type]="item.key === 'comments' ? 'text' : 'number'"
+                              [formControlName]="item.scGroup" [class.is-invalid]="validateField(item.scGroup)">
+                        </span>
+                        <span *ngIf="item.type === 'text'">
+                           <!-- {{getValue(secondaryCostForm,item.scGroup)}} -->
+                           <input class="form-control" type="text" [formControlName]="item.scGroup" disabled>
+                        </span>
+                     </div>
+                  </td>
+               </div>
+               <div class="action">
+                  <div>
+                     <span (click)="clear()"><i class="material-icons">close</i></span>
+                     <span (click)="addRow()"><i class="material-icons">done</i></span>
+                  </div>
+               </div>
+            </div>
+            <ng-container *ngFor="let data of displayValueList; index as i">
+               <div *ngIf="!editRow[i] && keyValueList[i].operation!=='DELETE'">
+                  <div class="valueList">
+                     <div>
+                        <div class="values" *ngFor="let item of secondaryCostTableHeaders | slice:0:6;">
+                           <span>{{item.label}} : </span><span>{{data[item.scGroup]}}</span>
+                        </div>
+                     </div>
+                     <div>
+                        <div class="values" *ngFor="let item of secondaryCostTableHeaders | slice:6:12;">
+                           <span>{{item.label}} : </span><span>{{data[item.scGroup]}}</span>
+                        </div>
+                     </div>
+                     <div>
+                        <i class="material-icons" title="Edit" (click)="editItem(i)">edit</i>
+                        <i class="material-icons" title="Clone" (click)="copyItem(i)">file_copy</i>
+                        <i class="material-icons" title="Delete" (click)="deleteItem(i)">delete</i>
+                     </div>
+                  </div>
+               </div>
+               <div *ngIf="editRow[i]" [formGroup]="editSecondaryCostForm[i]" class="scData">
+                  <div class="p-1">Edit Cost</div>
+                  <div class="scDropdowns">
+                     <td *ngFor="let item of secondaryCostTableHeaders;">
+                        <div class="heading">{{item.label}}</div>
+                        <div>
+                           <select class="form-control" *ngIf="item.type === 'dropdown'" name="" id=""
+                              [formControlName]="item.scGroup" [class.is-invalid]="validateField(item.scGroup, true, i)">
+                              <option [ngValue]="null" class="placeholder">Select</option>
+                              <option *ngFor="let option of item.options" [value]="option.key">{{option.value}}</option>
+                           </select>
+                           <span *ngIf="item.type === 'inputText'">
+                              <input class="form-control" [type]="item.key === 'comments' ? 'text' : 'number'" [disabled]="(item.key === 'fxToBase' && item.scGroup.value === 1 ) ? true : false"
+                                 [formControlName]="item.scGroup" [class.is-invalid]="validateField(item.scGroup, true, i)">
+                           </span>
+                           <span *ngIf="item.type === 'text'">
+                              <input class="form-control" type="text" [formControlName]="item.scGroup" disabled>
+                           </span>
+                        </div>
+                     </td>
+                  </div>
+                  <div class="action">
+                     <div>
+                        <span (click)="clearRow(i)"><i class="material-icons">close</i></span>
+                        <span (click)="updateRow(i)"><i class="material-icons">done</i></span>
+                     </div>
+                  </div>
+               </div>
+            </ng-container>
+         </table>
+      </div>
+   </div>
+   <div class="modal-footer justify-content-between">
+      <button type="button" class="btn btn-outline-dark" (click)="cancel(modal)">{{fields.cancelBtn.label}}</button>
+      <button *ngIf="itemCheckPass" type="button" class="btn btn-primary" (click)="saveSecondaryCost(modal)">{{fields.saveBtn.label}}</button>
+   </div>
+</ng-template>
+<app-confirm-popup #confirm btn1="OK"></app-confirm-popup>
+<span class="popup-link" (click)="open(content)">{{estimatesNum > 0 ? estimatesNum+" costs added" :fields.addCost.label}}</span>

@@ -1,0 +1,37 @@
+<div class="heading-container">
+  <div>{{ fields.documentUpload.label }}</div>
+</div>
+<div>
+  <table class="table">
+    <tr>
+      <th class="fl25">{{ fields.document.label }}</th>
+      <th class="fle ">{{ fields.documentDate.label }}</th>
+      <th>{{ fields.description.label }}</th>
+      <th>Action</th>
+    </tr>
+
+    <tr class="colour" *ngFor="let data of newDocumentList; index as i">
+      <!-- <td>
+        <span class="popup-link" (click)="downloadItem(data)"
+          >{{ data.otherAttributes }} | {{ data.name }}</span
+        >
+      </td>
+      <td>{{ data.uploadedDate }}</td>
+      <td>{{ data.description }}</td> -->
+      <td>{{ data.documentType }} | {{ data.fileName }}</td>
+      <td>{{ data.documentDate | date: 'dd-MMM-yyyy' }}</td>
+      <td>{{ data.description !== "null" ? data.description : "" }}</td>
+      <td>
+        <img (click)="downloadItem(data)" class="cursor searchIcon pd5" src=".\assets\icons\Download.png" />
+      </td>
+    </tr>
+  </table>
+</div>
+<p *ngIf="showWarning">
+  <ngb-alert type="danger" (close)="closeAlert()">{{errorMsg}}</ngb-alert>
+</p>
+<ng-container *ngIf="showLoader">
+  <div class="blur">
+      <div class="loader"></div>
+  </div>
+</ng-container>

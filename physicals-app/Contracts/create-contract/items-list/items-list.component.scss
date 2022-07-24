@@ -1,0 +1,408 @@
+@import '../../../styles/contract';
+
+.item-list {
+  border: 1px solid #ccc;
+  .heading-container {
+    padding: 5px 10px;
+    font-size: 16px;
+    display: flex;
+    justify-content: space-between;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #ccc;
+    .link {
+      color: dodgerblue;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .input-group{
+      input{
+        height: 30px;
+        width: 200px;
+      }
+      div{
+        height: 30px;
+      }
+    }
+  }
+
+  .action {
+    div {
+      width: 85px;
+    }
+  }
+}
+
+.alert {
+  position: fixed;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+  border: 1px solid red;
+  font-size: 15px;
+  color: red;
+  border-radius: 0.5rem;
+  z-index: 15;
+  top: 55px;
+  left: 0;
+  width: 40vw;
+  margin: 0 30vw;
+  text-align: center;
+}
+
+.pd5 {
+  padding: 2px;
+}
+.wid60 {
+  width: 60px;
+}
+
+.loader-table {
+  border: 8px solid #3498db;
+  border-top: 8px solid #fff;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.blur {
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  background: #00000075;
+}
+
+.blur-table{
+  height: calc(100vh - 165px);
+  width: calc(100vw - 220px);
+  z-index: 1;
+  background: white;
+}
+
+table.dataTable thead .sorting {
+  background-image: none !important;
+}
+
+table.dataTable thead .sorting_asc {
+  background-image: none !important;
+}
+
+body .ui-widget {
+  font-family: "Proxima Nova";
+  background-image: none !important;
+}
+
+table.dataTable thead .sorting_asc {
+  background-image: none !important;
+}
+
+.render-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.input-group {
+  margin-left: 10px;
+}
+
+.search-table{
+  input{
+    height: 30px;
+  }
+  div{
+    height: 30px;
+  }
+}
+
+.filters-table{
+  div{
+    margin-left: 14px;
+  }
+}
+
+.ui-table .ui-table-tbody > tr:nth-child(even) {
+  background-color: #fafafa !important;
+}
+
+body .ui-table .ui-table-caption,
+body .ui-table .ui-table-summary {
+  background-color: #fff !important;
+  border: none !important;
+}
+
+input[type="checkbox"] {
+  -webkit-appearance: button !important;
+}
+
+.input-group-text {
+  background-color: #fff !important;
+}
+
+.input-group > .form-control:not(:last-child) {
+  border-right: none !important;
+}
+
+.filter-input {
+  position: relative;
+  > input {
+    height: 34.8px;
+    width: 250px !important;
+    padding-left: 5px;
+    border: 1px solid #a6a6a6;
+    border-radius: 0.2rem;
+  }
+  > i {
+    position: absolute;
+    right: 5px;
+    top: 7px;
+  }
+}
+
+.card-body {
+  padding-right: 0px;
+  padding-left: 0px;
+}
+
+p-table::ng-deep {
+  .ui-table{
+    .ui-table-scrollable-wrapper{
+      border: 1px solid #ccc;
+      .ui-table-scrollable-body{
+        min-height: calc(100vh - 330px);
+      }
+    }
+  }
+  
+  .ui-paginator {
+    background-color: inherit !important;
+    border: none !important;
+  }
+  .ui-table .ui-table-caption,
+  .ui-table .ui-table-summary {
+    background-color: inherit !important;
+    border: none !important;
+  }
+
+  .ui-table .ui-sortable-column.ui-state-highlight {
+    color: black !important;
+  }
+
+  .ui-table .ui-table-thead > tr > th {
+    background-color: #2d7ebc;
+    color: white;
+    border: none !important;
+    border-bottom: 1px solid#DBDBDB !important;
+    padding: 10px;
+    vertical-align: text-top;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .ui-table .ui-table-tbody > tr > td {
+    border: none !important;
+    border-bottom: 1px solid#DBDBDB !important;
+    padding: 10px;
+    overflow: visible;
+    position: relative;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .ui-table .ui-table-tbody > tr > td:last-child {
+    overflow: hidden;
+  }
+
+  .ui-table .ui-editable-column input:focus{
+    outline: none;
+  }
+
+  .pi-sort:before {
+    content: "" !important;
+  }
+  p-multiselect {
+    label {
+      margin-bottom: 0 !important;
+    }
+    .ui-multiselect .ui-multiselect-label{
+      white-space: nowrap !important;
+    }
+  }
+  > .ui-table > .ui-widget-header.ui-widget-header {
+    display: flex !important;
+    justify-content: flex-end;
+    align-items: stretch;
+    > div {
+      margin-left: 5px;
+    }
+    .btn-group {
+      height: 34.8px;
+    }
+  }
+}
+
+.space-around {
+  justify-content: flex-end;
+}
+
+.link {
+  text-decoration: underline;
+  color: blue;
+}
+.marLR {
+  margin-left: 14px;
+  margin-right: 14px;
+}
+
+.editTextInput{
+  width: 60px;
+  outline: none;
+  border-radius: 3px;
+  border: 1px solid #20a8d8;
+  margin-right: 5px;
+  position: absolute;
+  top: 8px;
+  left: 8px;
+}
+
+.nonEditText{
+  position: absolute;
+  top: 12px;
+  left: 70px;
+}
+
+.dash{
+  position: absolute;
+  top: 10px;
+  left: 110px;
+}
+
+.deliveryFromDate{
+  position: absolute;
+  left: 5px;
+  top: 5px;
+}
+
+.deliveryToDate{
+  position: absolute;
+  top: 5px;
+  left: 120px;
+}
+
+p-table::ng-deep { 
+  .ui-chkbox {
+    margin-left: 4px;
+    width: 12px;
+    height: 12px;
+    .ui-chkbox-box {
+      width: 12px;
+      height: 12px;
+      .ui-chkbox-icon {
+        font-size: 10px;
+      }
+    }
+    .ui-chkbox-box.ui-state-active {
+      border-color: #2d7ebc;
+      background-color: #2d7ebc;
+      box-shadow: none;
+    }
+    .ui-chkbox-box.ui-state-active:not(.ui-state-disabled):hover{
+      border-color: #2d7ebc;
+      background-color: #2d7ebc;
+      color: #ffffff;
+      box-shadow: none;
+    }
+    .ui-chkbox-box.ui-state-focus {
+      outline: none;
+      box-shadow: none;
+    }
+  }
+  
+}
+
+p-multiselect::ng-deep > .ui-widget > .ui-multiselect-panel > .ui-corner-all > .ui-multiselect-close.ui-corner-all{
+  display: none !important;
+}
+.render-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  margin: 0 -5px;
+}
+
+.btn-margin {
+  margin: 0 5px;
+}
+
+.btn-secondary {
+  background-color: inherit !important;
+  border-color: inherit !important;
+  border: none !important;
+}
+.custom-btn {
+  width: 100px;
+  border-radius: 2px;
+  height: 32px;
+}
+.oms-blue{
+  background-color: #2D7EBC !important;
+  width: auto;
+}
+.dropdown-toggle{
+  border-color: #e7e7e7;
+  padding-bottom: 0px !important;
+  height: 30px;
+  padding-top: 5px;
+}
+.dropdown-toggle::after {
+  
+  border: unset;
+  margin-left: 5px;
+  padding: 0 5px;
+  vertical-align: -3px;
+  display: unset;
+}
+.dropdown-toggle:hover, .dropdown-toggle:active{
+  color: #2d7ebc !important;
+  background-color: unset !important;
+  border-color: #e7e7e7 !important;
+}
+.show > .dropdown-toggle {
+  color: #2d7ebc !important;
+  background-color: unset !important;
+  border-color: #e7e7e7 !important;
+}
+.dropdownActions {
+  left: -51px !important;
+  .btn {
+    background-color: #ffffff !important;
+    border: #ffffff !important;
+    color: #23282c !important;
+    width: 100% !important;
+    text-align: left;
+    font: normal 14px "Proxima Nova";
+    &:hover {
+      background-color: #C6DEFA   !important
+    }
+  }
+  
+}

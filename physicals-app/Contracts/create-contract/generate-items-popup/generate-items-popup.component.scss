@@ -1,0 +1,36 @@
+.w-300{
+    width:325px;
+}
+
+.modal-header{
+    padding: 10px;
+    font-size: 16px;
+}
+
+.numItems{
+    text-align: center;
+    margin: 40px 0;
+    span{
+        font-weight: 600;
+    }
+}
+
+.close{
+    outline: none;
+}
+
+.header-btn{
+    font-size: 12px;
+    margin-left: 10px;
+    color: silver;
+    cursor: pointer;
+    padding: 5px 10px;
+    &.line{
+        border-left: 2px solid silver;
+    }
+    &:hover{
+        color: #0275d8;
+        background: #cccccc85;
+        border-radius: 3px;
+    }
+}

@@ -1,0 +1,1 @@
+java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=1044 -jar .\build\libs\physicals-api-3.28.1.jar

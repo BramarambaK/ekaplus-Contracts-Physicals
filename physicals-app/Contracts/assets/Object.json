@@ -1,0 +1,695 @@
+db.getCollection('Boliden_Meta').insert(
+{
+    "_id" : ObjectId("5c1a634554476d81a3a1d231"),
+    "name" : "Contract",
+    "type" : "object",
+    "fields" : {
+        "generalDetails" : {
+            "label" : "General Details"
+        },
+        "templateId" : {
+            "label" : "Select Template",
+            "options" : [ 
+                {
+                    "key" : "t1",
+                    "value" : "template 1"
+                }
+            ]
+        },
+        "templateName" : {
+            "label" : "Enter Template Name"
+        },
+        "issueDate" : {
+            "label" : "Contract Issue Date"
+        },
+        "dealType" : {
+            "label" : "Deal Type",
+            "options" : [ 
+                {
+                    "key" : "thirdParty",
+                    "value" : "Third Party"
+                }, 
+                {
+                    "key" : "interCompany",
+                    "value" : "Inter Company"
+                }
+            ]
+        },
+        "contractType" : {
+            "label" : "Contract Type",
+            "options" : [ 
+                {
+                    "key" : "P",
+                    "value" : "Purchase"
+                }, 
+                {
+                    "key" : "S",
+                    "value" : "Sale"
+                }
+            ]
+        },
+        "traderUserId" : {
+            "label" : "Trader Name",
+            "options" : [ 
+                {
+                    "key" : "userName",
+                    "value" : "Current User"
+                }
+            ]
+        },
+        "cpProfileId" : {
+            "label" : "CP Name",
+            "options" : [ 
+                {
+                    "key" : "cp1",
+                    "value" : "CP profile"
+                }
+            ],
+            "key" : "cpProfileId"
+        },
+        "paymentTermId" : {
+            "label" : "Payment Terms",
+            "options" : [ 
+                {
+                    "key" : "7D",
+                    "value" : "7 days after delivery"
+                }, 
+                {
+                    "key" : "15D",
+                    "value" : "15 days after delivery"
+                }, 
+                {
+                    "key" : "5D",
+                    "value" : "5 days after delivery"
+                }, 
+                {
+                    "key" : "30D",
+                    "value" : "30 days after delivery"
+                }
+            ]
+        },
+        "applicableLawId" : {
+            "label" : "Applicable Law/Contract",
+            "options" : [ 
+                {
+                    "key" : "maxARB",
+                    "value" : "maximum used arbitration for CP"
+                }
+            ]
+        },
+        "arbitrationId" : {
+            "label" : "Arbitration",
+            "options" : [ 
+                {
+                    "key" : "arb1",
+                    "value" : "arbitration rule 1"
+                }
+            ]
+        },
+        "optional" : {
+            "label" : "Optional"
+        },
+        "generalDetailsOptional" : {
+            "label" : "(Broker Name, Broker Person Incharge, Broker Ref. No., Broker Commission, CP Person Incharge, CP Contract Ref. No.)"
+        },
+        "agentProfileId" : {
+            "label" : "Broker Name",
+            "options" : [ 
+                {
+                    "key" : "agentName",
+                    "value" : "agent profile name"
+                }
+            ]
+        },
+        "brokerPersonInCharge" : {
+            "label" : "Broker Person Incharge",
+            "options" : [ 
+                {
+                    "key" : "brokeInCharge",
+                    "value" : "broker Incharge"
+                }
+            ]
+        },
+        "brokerRefNo" : {
+            "label" : "Broker Ref No.",
+            "options" : [ 
+                {
+                    "key" : "brkRef",
+                    "value" : "Broker Ref"
+                }
+            ]
+        },
+        "brokerCommission" : {
+            "label" : "Broker Commission",
+            "options" : [ 
+                {
+                    "key" : "brkercommission",
+                    "value" : "Broker Commission"
+                }
+            ]
+        },
+        "brokerCommissionUnit" : {
+            "label" : "Unit",
+            "options" : [ 
+                {
+                    "key" : "commUnit",
+                    "value" : "brokerCommissionUnit"
+                }
+            ]
+        },
+        "cpPersonInCharge" : {
+            "label" : "CP Person Incharge",
+            "options" : [ 
+                {
+                    "key" : "cpInCha",
+                    "value" : "Cp Person"
+                }
+            ]
+        },
+        "cpRefNo" : {
+            "label" : "CP Contact Ref No.",
+            "options" : [ 
+                {
+                    "key" : "cpConRef",
+                    "value" : "Cp cont Ref"
+                }
+            ]
+        },
+        "itemDetails" : {
+            "label" : "Item Details"
+        },
+        "productId" : {
+            "label" : "Product",
+            "options" : [ 
+                {
+                    "key" : "ProductId",
+                    "value" : "Product Id"
+                }
+            ]
+        },
+        "quality" : {
+            "label" : "Quality",
+            "options" : [ 
+                {
+                    "key" : "QAT-M0-11758",
+                    "value" : "Arabica Quanlity 1"
+                }
+            ]
+        },
+        "itemQty" : {
+            "label" : "Item Quantity"
+        },
+        "itemQtyUnitId" : {
+            "options" : [ 
+                {
+                    "key" : "quant",
+                    "value" : "Quantity"
+                }
+            ]
+        },
+        "tolerance" : {
+            "label" : "Tolerance"
+        },
+        "toleranceType" : {
+            "options" : [ 
+                {
+                    "key" : "Percentage",
+                    "value" : "%"
+                }
+            ]
+        },
+        "toleranceLevel" : {
+            "options" : [ 
+                {
+                    "key" : "tolLevel",
+                    "value" : "Level"
+                }
+            ]
+        },
+        "payInCurId" : {
+            "options" : [ 
+                {
+                    "key" : "bbl/usd",
+                    "value" : "BBL/USD"
+                }
+            ]
+        },
+        "priceType" : {
+            "label" : "Price Type",
+            "options" : [ 
+                {
+                    "key" : "flat",
+                    "value" : "Flat"
+                }, 
+                {
+                    "key" : "index",
+                    "value" : "Index"
+                }, 
+                {
+                    "key" : "formula",
+                    "value" : "Formula"
+                }
+            ]
+        },
+        "price" : {
+            "label" : "Contract Price"
+        },
+        "priceUnitId" : {
+            "options" : [ 
+                {
+                    "key" : "bbl/usd",
+                    "value" : "BBL/USD"
+                }
+            ]
+        },
+        "payInSettlementCurrency" : {
+            "label" : "Pay-In Settlement Currency",
+            "options" : [ 
+                {
+                    "key" : "GBP",
+                    "value" : "GBP"
+                }
+            ]
+        },
+        "fxRate" : {
+            "label" : "FX-Rate"
+        },
+        "fxRateUnit" : {
+            "options" : [ 
+                {
+                    "key" : "USD/GBP",
+                    "value" : "USD/GBP"
+                }
+            ]
+        },
+        "differential" : {
+            "label" : "Differential"
+        },
+        "differentialUnit" : {
+            "options" : [ 
+                {
+                    "key" : "USD/Barrel",
+                    "value" : "USD/Barrel"
+                }
+            ]
+        },
+        "formula" : {
+            "label" : "Formula"
+        },
+        "baseCurve" : {
+            "label" : "Base Curve"
+        },
+        "transaportationMode" : {
+            "label" : "Transportation Mode",
+            "options" : [ 
+                {
+                    "key" : "transMode1",
+                    "value" : "Vessel"
+                }
+            ]
+        },
+        "deliveryPeriod" : {
+            "label" : "Delivery Period"
+        },
+        "originationCountryId" : {
+            "label" : "Loading Country",
+            "options" : [ 
+                {
+                    "key" : "LoadingCou",
+                    "value" : "Loading Country"
+                }
+            ]
+        },
+        "originationCityId" : {
+            "label" : "Loading Location",
+            "options" : [ 
+                {
+                    "key" : "LoaCityId",
+                    "value" : "Loading City"
+                }
+            ]
+        },
+        "loadingLocationGroupTypeId" : {
+            "label" : "Loading Location",
+            "options" : [ 
+                {
+                    "key" : "City",
+                    "value" : "City"
+                }, 
+                {
+                    "key" : "Port",
+                    "value" : "Port"
+                }
+            ]
+        },
+        "destinationLocationGroupTypeId" : {
+            "label" : "Discharge Loacation",
+            "options" : [ 
+                {
+                    "key" : "City",
+                    "value" : "City"
+                }, 
+                {
+                    "key" : "Port",
+                    "value" : "Port"
+                }
+            ]
+        },
+        "destinationCountryId" : {
+            "label" : "Discharge Country",
+            "options" : [ 
+                {
+                    "key" : "destCountry",
+                    "value" : "destCountr"
+                }
+            ]
+        },
+        "destinationCityId" : {
+            "label" : "Discharge Location",
+            "options" : [ 
+                {
+                    "key" : "destiCityId",
+                    "value" : "dest city"
+                }
+            ]
+        },
+        "paymentDueDate" : {
+            "label" : "Payment Due Date"
+        },
+        "incotermId" : {
+            "label" : "INCO Term",
+            "options" : [ 
+                {
+                    "key" : "Inco",
+                    "value" : "Invo"
+                }
+            ]
+        },
+        "profitCenterId" : {
+            "label" : "Profit Center",
+            "options" : [ 
+                {
+                    "key" : "profCenId",
+                    "value" : "profCenId"
+                }
+            ]
+        },
+        "strategyAccId" : {
+            "label" : "Strategy",
+            "options" : [ 
+                {
+                    "key" : "stra",
+                    "value" : "stra"
+                }
+            ]
+        },
+        "valuationFormula" : {
+            "label" : "Valuation",
+            "options" : [ 
+                {
+                    "key" : "value",
+                    "value" : "valuationFormula"
+                }
+            ]
+        },
+        "secondaryCost" : {
+            "label" : "Secondary Cost"
+        },
+        "addCost" : {
+            "label" : "+ Add Cost"
+        },
+        "addMore" : {
+            "label" : "+ Add More"
+        },
+        "costComponent" : {
+            "label" : "Cost Component",
+            "options" : [ 
+                "Inspection", 
+                "Package"
+            ],
+            "key" : "costComponent"
+        },
+        "costType" : {
+            "label" : "Cost Type",
+            "options" : [ 
+                "Expense", 
+                "Other"
+            ],
+            "key" : "costType"
+        },
+        "rateType" : {
+            "label" : "Rate Type",
+            "options" : [ 
+                "Absolute", 
+                "Market Value"
+            ],
+            "key" : "rateType"
+        },
+        "costValue" : {
+            "label" : "Cost Value",
+            "key" : "costValue"
+        },
+        "costValueCurrency" : {
+            "options" : [ 
+                "USD", 
+                "INR", 
+                "EURO", 
+                "JPY", 
+                "GBP"
+            ],
+            "key" : "costValueCurrency"
+        },
+        "fxToBase" : {
+            "label" : "FX to Base",
+            "key" : "fxToBase"
+        },
+        "secondaryCostComments" : {
+            "label" : "Comments",
+            "key" : "comments"
+        },
+        "secondaryCostAction" : {
+            "label" : "Action"
+        },
+        "generateItems" : {
+            "label" : "Generate Items"
+        },
+        "saveItemBtn" : {
+            "label" : "Save Item"
+        },
+        "newItemBtn" : {
+            "label" : "New Item"
+        },
+        "defineFormula" : {
+            "label" : "Define Formula"
+        },
+        "saveBtn" : {
+            "label" : "SAVE"
+        },
+        "itemDeliveryFrequency" : {
+            "label" : "Frequency",
+            "options" : [ 
+                {
+                    "key" : "Monthly",
+                    "value" : "Monthly"
+                }
+            ]
+        },
+        "itemsGenerateMsg" : {
+            "label" : "items will be generated"
+        },
+        "generateBtn" : {
+            "label" : "GENERATE"
+        },
+        "cancelBtn" : {
+            "label" : "CANCEL"
+        },
+        "itemNo" : {
+            "label" : "Item No."
+        },
+        "contractQuantity" : {
+            "label" : ""
+        },
+        "minQuantity" : {
+            "label" : "Min Quantity"
+        },
+        "maxQuantity" : {
+            "label" : "Max Quantity"
+        },
+        "deliveredQuantity" : {
+            "label" : "Delivered Quantity"
+        },
+        "openQuantity" : {
+            "label" : "Open Quantity"
+        },
+        "action" : {
+            "label" : "Action"
+        },
+        "addItem" : {
+            "label" : "+ Add Item"
+        },
+        "documentUpload" : {
+            "label" : "Document Upload"
+        },
+        "document" : {
+            "label" : "Document",
+            "options" : [ 
+                {
+                    "key" : "pdf",
+                    "value" : "PDF"
+                }
+            ]
+        },
+        "documentDate" : {
+            "label" : "Document date"
+        },
+        "description" : {
+            "label" : "Description"
+        },
+        "optionalItemDetails" : {
+            "label" : "(Quality Finalization Point, Quantity Finalization Point, Inspection Company, Late Payment Interest Type, Late Payment Interest Rate, Interest Method, Option Load, Option Discharge)"
+        },
+        "qualityFinalizationPoint" : {
+            "label" : "Qality Finalization Point",
+            "options" : [ 
+                {
+                    "key" : "stra",
+                    "value" : "stra"
+                }
+            ]
+        },
+        "weightFinalizationPoint" : {
+            "label" : "Quantity Finalization Point",
+            "options" : [ 
+                {
+                    "key" : "stra",
+                    "value" : "stra"
+                }
+            ]
+        },
+        "inspectionCompany" : {
+            "label" : "Inspection Company",
+            "options" : [ 
+                {
+                    "key" : "stra",
+                    "value" : "stra"
+                }
+            ]
+        },
+        "latePaymentInterestType" : {
+            "label" : "Late Payment Interest Type",
+            "options" : [ 
+                {
+                    "key" : "stra",
+                    "value" : "stra"
+                }
+            ]
+        },
+        "latePaymentInterestRate" : {
+            "label" : "Late Payment Interest Rate",
+            "options" : [ 
+                {
+                    "key" : "stra",
+                    "value" : "stra"
+                }
+            ]
+        },
+        "compounding" : {
+            "label" : "Compounding"
+        },
+        "latePaymentInterestMethod" : {
+            "label" : "Interest Method",
+            "options" : [ 
+                {
+                    "key" : "stra",
+                    "value" : "stra"
+                }
+            ]
+        },
+        "optionLoad" : {
+            "label" : "Option Load",
+            "options" : [ 
+                {
+                    "key" : "stra",
+                    "value" : "stra"
+                }
+            ]
+        },
+        "provisionalInvoice" : {
+            "label" : "Provisional Invoice % to Pay "
+        },
+        "lycanDate" : {
+            "label" : "Lycan Date"
+        },
+        "optionDischarge" : {
+            "label" : "Option Discharge",
+            "options" : [ 
+                {
+                    "key" : "stra",
+                    "value" : "stra"
+                }
+            ]
+        },
+        "itemListTable" : {
+            "headers" : [ 
+                "Item No.", 
+                "Delivery Periods", 
+                "Transportation Mode", 
+                "Contract Quantity", 
+                "Min Quantity", 
+                "Max Quantity", 
+                "Delivered Quantity", 
+                "Open Quantity"
+            ]
+        },
+        "interestMethod" : {
+            "label" : "Interest Method"
+        },
+        "compounding" : {
+            "label" : "Compounding",
+            "options" : [ 
+                "", 
+                ""
+            ]
+        },
+        "optionalLoad" : {
+            "label" : "Optional Load"
+        },
+        "loadingCity" : {
+            "options" : [ 
+                "Loading City"
+            ]
+        },
+        "locationPD" : {
+            "options" : [ 
+                "Loacation P/D"
+            ]
+        },
+        "usdMT" : {
+            "options" : [ 
+                "USD/MT"
+            ]
+        },
+        "optionDischarge" : {
+            "label" : "Option Discharge"
+        },
+        "actionOnContract" : {
+            "label" : "Action On Contract"
+        },
+        "approve" : {
+            "label" : "Approve"
+        },
+        "reject" : {
+            "label" : "Reject"
+        },
+        "remark" : {
+            "label" : "Remark"
+        },
+        "proceed" : {
+            "label" : "PROCEED"
+        },
+        "specification" : {
+            "label" : "Specification"
+        }
+    }
+}
+);

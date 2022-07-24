@@ -1,0 +1,38 @@
+version : '3.7'
+
+services:
+
+  connect:
+    image: 192.168.1.225:50000/connect-b-k
+    ports: 
+       - "8484:8080"
+    env_file:
+       - environment_local.properties
+  
+  physicals:
+    image: 192.168.1.225:50000/physicals-b-k
+    ports: 
+       - "9090:9090"
+    env_file:
+       - environment_local.properties
+  
+  mdm:
+    image: 192.168.1.225:50000/mdm-b-k
+    ports: 
+       - "1111:1111"
+    env_file:
+       - environment_local.properties
+  
+  utility:
+    image: 192.168.1.225:50000/utility-b-k
+    ports: 
+       - "3333:3333"
+    env_file:
+       - environment_local.properties
+
+  pricing:
+    image: 192.168.1.225:50000/pricing-b-k
+    ports: 
+       - "8180:8180"
+    env_file:
+       - environment_local.properties

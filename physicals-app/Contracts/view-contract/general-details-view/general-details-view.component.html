@@ -1,0 +1,41 @@
+<div class="heading-container">
+    <div>
+        <span class="font-weight-bold">{{fields.generalDetails.label}}</span>
+        <span class="contractRef">Contract Ref : {{contract?.contractRefNo}}</span>
+    </div>
+    <div>
+        <app-approve-popup [internalContractRefNo]="contract.internalContractRefNo"></app-approve-popup>
+        <span class="line1"></span>
+        <span class="header-btn" (click)="editItem()">Amend / Modify</span>
+    </div>
+</div>
+<div class="font-weight-bold ml-2 mt-2">Mandatory Fields</div>
+<div class="genDetails d-flex justify-content-start">
+    <table>
+        <tr *ngFor="let data of mandatoryFieldsCol1View">
+            <td>{{data.label}}</td>
+            <td>{{data.value}}</td>
+        </tr>
+    </table>
+    <table>
+        <tr *ngFor="let data of mandatoryFieldsCol2View">
+            <td>{{data.label}}</td>
+            <td>{{data.value}}</td>
+        </tr>
+    </table>
+</div>
+<div class="font-weight-bold ml-2 mt-4">Optional Fields</div>
+<div class="genDetails d-flex justify-content-start">
+    <table>
+        <tr *ngFor="let data of optionalFieldsCol1View">
+            <td>{{data.label}}</td>
+            <td>{{data.value}}</td>
+        </tr>
+    </table>
+    <table>
+        <tr *ngFor="let data of optionalFieldsCol2View">
+            <td>{{data.label}}</td>
+            <td>{{data.value}}</td>
+        </tr>
+    </table>
+</div>

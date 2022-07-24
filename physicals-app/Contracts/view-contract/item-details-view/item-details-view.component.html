@@ -1,0 +1,52 @@
+<div class="heading-container">
+  <div>
+    <span>Item Details</span>
+    <span class="contractRef">Contract Ref : {{contract?.contractRefNo}}</span>
+  </div> 
+  <div>
+      <app-approve-popup [internalContractRefNo]="internalContractRefNo"></app-approve-popup>
+      <span class="line1"></span>
+      <span class="header-btn" (click)="editItem()">Amend / Modify</span>
+  </div>
+</div>
+<div>
+  <div class="animated fadeIn">
+    <div class="table-responsive-sm">
+      <table class="table table-hover">
+        <thead>
+          <tr class="table-header-row">
+            <th *ngFor="let header of headerList">{{ header }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="table-data-row" *ngFor="let item of listViewData; index as itemIndex" style="height: 40px; vertical-align: middle">
+            <td *ngFor="let field of basicFields; index as i" abbr="{{headerList[i]}}">
+              <div [ngSwitch]="field">
+                <div *ngSwitchCase="'itemNo'" (click)="showItemDetails(popup, itemIndex)" class="link">{{ item[field] }}</div>
+                <div *ngSwitchCase="'components'" (click)="openItemComponentWindow(itemIndex)" class="link"><span *ngIf="item['priceTypeId']==='FormulaPricing'">{{ item[field] }}</span></div>
+                <div *ngSwitchCase="'formula'">
+                  <div *ngIf="item.pricingStrategy==='pricingStrategy-001'">
+                    <pricing-popup class="ml-4" (click)="onClickpricingTriggerFor()" [formulaName]="this.pricingFormulaNames[itemIndex]"
+                      [contractDetails]="contract" [itemIndex]="itemIndex" [mdmPriceUnit]="fields.priceUnitId.options" [disableFormulaModification]="true" [fromViewContractPage]="fromViewContractPage">
+                    </pricing-popup>
+                  </div>
+                  <div *ngIf="item.pricingStrategy==='pricingStrategy-002' || item.pricingStrategy==='pricingStrategy-003'">
+                    <split-pricing-popup [splitsData]="splitsData" [contractDetails]="contract" [itemIndex]="itemIndex" [mdmPriceUnit]="fields.priceUnitId.options"></split-pricing-popup>
+                  </div>
+                </div>
+                <div *ngSwitchDefault>{{ item[field] }}</div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <ng-container *ngIf="apiCalled">
+      <div class="blur"></div>
+      <div>
+          <div class="loader"></div>
+      </div>
+  </ng-container>
+</div>
+<app-item-view-popup [fields]="fields" [splitData]="splitData" #popup></app-item-view-popup>

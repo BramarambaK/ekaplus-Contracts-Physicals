@@ -1,0 +1,12 @@
+@import '../styles/contract';
+  
+  .blur{
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1;
+    background: #fff;
+  }
+  

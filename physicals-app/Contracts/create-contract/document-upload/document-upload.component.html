@@ -1,0 +1,82 @@
+<div class="heading-container">
+  <div>{{ fields.documentUpload.label }}</div>
+</div>
+<div>
+  <form [formGroup]="documentUploadForm">
+    <table class="table">
+      <tr>
+        <th class="fl25">{{ fields.document.label }}</th>
+        <th class="fle ">{{ fields.documentDate.label }}</th>
+        <th>{{ fields.description.label }}</th>
+        <th class="pl-2 fle">{{ fields.action.label }}</th>
+      </tr>
+      <tr>
+        <td class="foFlex  ">
+          <div class="formGroup ">
+            <select class="form-control width" formControlName="documentType">
+              <option *ngFor="let option of docType" [value]="option.key"><span>{{ option.value }}</span></option>
+            </select>
+          </div>
+          <span>
+            <label class="form-control file-upload linkForUpload">
+              <span class="ForUpload">upload</span>
+              <input type="file" (change)="fileChange($event)" formControlName="document" />
+            </label>
+          </span>
+        </td>
+        <td>
+          <div class="formGroup">
+            <my-date-picker type="date" formControlName="documentDate" [options]="myDatePickerOptions"></my-date-picker>
+          </div>
+        </td>
+        <td>
+          <input class="form-control width384" type="text" formControlName="description" />
+        </td>
+        <td class="action">
+          <img (click)="cancel()" class="cursor searchIcon pd5" src=".\assets\icons\Cancel.png" />
+          <img class="cursor searchIcon pd5" (click)="addRow()" src=".\assets\icons\Save.png" />
+        </td>
+      </tr>
+      <tr class="colour" *ngFor="let data of newDocumentList; index as i">
+        <td>{{ data.documentType }} | {{ data.fileName }}</td>
+        <td>{{ data.documentDate | date: 'dd-MMM-yyyy' }}</td>
+        <td>{{ data.description !== "null" ? data.description : "" }}</td>
+        <td>
+          <email-popup #content [attachedDocument]="data"></email-popup>
+          <img (click)="downloadItem(data)" class="cursor searchIcon pd5" src=".\assets\icons\Download.png" />
+          <img (click)="deleteItem(data, i)" class="cursor searchIcon pd5" src=".\assets\icons\Delete.png" />
+        </td>
+      </tr>
+    </table>
+  </form>
+</div>
+
+<!-- popups -->
+<p-confirmDialog #cd header="Confirmation" icon="pi pi-exclamation-triangle">
+  <p-footer>
+    <button type="button" pButton label="Create Contract" (click)="cd.accept()"></button>
+    <button type="button" pButton label="Save as draft" (click)="cd.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+<app-approve-contract-popup (action)="afterApprovalPopupCreateContract($event)"
+  (cancelApproval)="afterApprovalCancel()"></app-approve-contract-popup>
+
+<app-confirm-popup #confirm btn1="OK"></app-confirm-popup>
+<app-confirm-popup #contractCreated btn1="OK" (action)="afterContractCreated()"></app-confirm-popup>
+<app-confirm-popup #draftCreated btn1="CONTINUE CONTRACT" btn2="EXIT TO DRAFT LISTING"
+  (action)="afterDraftCreated($event)"></app-confirm-popup>
+<app-confirm-popup #contractDraftPopup title="Confirmation"
+  body="Do you want to create contract with 1 item or save as draft?" btn1="SAVE AS CONTRACT" btn2="SAVE AS DRAFT"
+  (action)="confirmSaveContractOrDraft($event)"></app-confirm-popup>
+<app-confirm-popup #reqFailed btn1="OK"></app-confirm-popup>
+
+<p *ngIf="showWarning">
+  <ngb-alert type="danger" (close)="closeAlert()">{{errorMsg}}</ngb-alert>
+</p>
+
+<ng-container *ngIf="showLoader">
+  <div class="blur">
+      <div class="loader"></div>
+  </div>
+</ng-container>

@@ -1,0 +1,61 @@
+.modal-body {
+    padding-top: 25px !important;
+}
+.modal-header {
+    padding: 5px;
+}
+
+body .ui-tabview.ui-tabview-top .ui-tabview-nav {
+    li {
+        border: none;
+        outline: none;
+        background-color: #fff;
+        a {
+            color: #000 !important;
+            padding: 5px;
+            width: 200px;
+            text-align: center;
+            div{
+                margin: 5px;
+            }
+        }
+        &:active {
+            outline: none;
+        }
+        &:focus {
+            outline: none;
+        }
+    }
+    li.ui-tabview-selected {
+        background-color: #fff;
+        border: none;
+        border-bottom: 3px solid forestgreen !important;
+        outline: none;
+        &:hover {
+            background-color: #fff;
+            border-radius: 0;
+            border: none;
+        }
+    }
+    li:not(.ui-state-active):not(.ui-state-disabled):hover {
+        background-color: #e8e8e8;
+        border: #e8e8e8;
+        border-radius: 0;
+    }
+}
+
+body .ui-tabview .ui-tabview-panels {
+    border: none;
+    border-top: 0.5px solid #c8c8c8;
+    padding: 0;
+}
+
+.closeSplits {
+    position: absolute;
+    top: 45px;
+    right: 15px;
+}
+
+.link {
+    color: blue;
+}

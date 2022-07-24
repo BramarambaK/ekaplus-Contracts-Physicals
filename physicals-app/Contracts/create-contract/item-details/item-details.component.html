@@ -1,0 +1,1115 @@
+<div class="heading-container d-flex justify-content-md-between">
+    <div>
+        <span class="mr-2">{{fields.itemDetails.label}} </span>
+        <span *ngIf="new_item">
+            <span class="line"></span>
+            <span class="newItem">{{fields.newItemBtn.label}}</span>
+        </span>
+        <span *ngIf="isEditContract()" class="contractRef"><span class="crefNo">Contract Ref : {{contractData?.contractRefNo}}</span><span class="itemNo">Item No. : {{itemNo}}</span></span>
+    </div>
+    <div class="position-relative">
+        <app-recommendation-popup class="recommendation-icon" (action)="useTextToContract($event)"></app-recommendation-popup>
+        <app-generate-items-popup (saveGeneratedItems)="saveGeneratedItems($event)" [fields]="fields" [splitData]="splitFormData" [action]="action"
+            [appObject]="appObject" [contract]="contractData" [id]="contractId" [itemIndex]="itemIndex" [paymentTermDetails]="paymentTermDetails" [incotermDetails]="incotermDetails">
+        </app-generate-items-popup>
+        <span class="header-btn" (click)="openGenerateItemPopup()">{{fields.generateItems.label}}</span>
+        <span class="line1"></span>
+        <span class="header-btn" (click)="saveContract()">{{fields.saveItemBtn.label}}</span>
+    </div>
+</div>
+<ng-container *ngIf="apiCalled">
+    <div class="blur"></div>
+    <div>
+        <div class="loader"></div>
+    </div>
+</ng-container>
+<div [formGroup]="itemDetails_form" class="body form position-relative">
+    <ng-container *ngIf="initLoader">
+        <div class="init-blur"></div>
+        <div>
+            <div class="init-loader"></div>
+        </div>
+    </ng-container>
+    <div class="holder">
+        <div class="d-flex flex-wrap">
+            <div class="formGroup">
+                <label>{{fields.productId.label}}</label>
+                <div>
+                <select class="form-control d-inline-block" [ngStyle]="{'pointer-events' : checkItemQty ? 'none' : 'all','background-color': checkItemQty ? '#e4e7ea4a': 'none'}" formControlName="productId" (change)="getSelectedTxt($event,'productId')" [ngClass]="setFieldClasses('productId')">
+                    <option [ngValue]="null" class="placeholder">Select</option>
+                    <option *ngFor="let option of fields.productId.options" [value]="option.key">{{option.value}}
+                    </option>
+                </select>
+                <!-- <span class="popup-link" (click)="openNewWindowForPd()">
+                    P/D Schedule
+                </span> -->
+            </div>
+            </div>
+            <div class="formGroup">
+                <label>{{fields.quality.label}}</label>
+                <div>
+                    <select class="form-control d-inline-block quality" formControlName="quality" (change)="getSelectedTxt($event,'quality')"
+                        [ngClass]="setFieldClasses('quality')">
+                        <option [ngValue]="null" class="placeholder">Select</option>
+                        <option *ngFor="let option of fields.quality.options" [value]="option.key">{{option.value}}
+                        </option>
+                    </select>
+                    <div  class="select-loading-multi-first w-55-pct" *ngIf="getControl('quality').errors?.loading">
+                        <span>loading</span>
+                        <div class="dependant-loader"></div>
+                    </div>
+                    <span class="popup-link qualityPopup" [title]="getContractQualityDensityTitle()"> 
+                        <app-qaulity-spec-popup [id]="getQual()" [disableDensityFields]="disableDensityFields" [itemDetails]="itemDetails_form.getRawValue()" [productId]="itemDetails_form.getRawValue().productId" [fields]="fields" (addContractQualityDensity)="addContractQualityDensity($event)"></app-qaulity-spec-popup>
+                    </span>
+                    <!-- <span class="popup-link" (click)="openNewWindowForPd()">
+                        P/D Schedule
+                    </span> -->
+                </div>
+            </div>
+            <div class="formGroup">
+                <label>{{fields.itemQty.label}}</label>
+                <div class="multiInputField">
+                    <input type="number" min="0.00001" class="form-control d-inline-block two-field" formControlName="itemQty"
+                        [ngClass]="setFieldClasses('itemQty')">
+                    <select class="form-control d-inline-block two-field" formControlName="itemQtyUnitId" (change)="getSelectedTxt($event,'itemQtyUnitId')"
+                        [ngClass]="setFieldClasses('itemQtyUnitId')">
+                        <option [ngValue]="null" class="placeholder">Select</option>
+                        <option *ngFor="let option of fields.itemQtyUnitId.options" [value]="option.key">
+                            {{option.value}}</option>
+                    </select>
+                    <div *ngIf="getControl('itemQtyUnitId').errors?.loading" class="select-loading-multi">
+                        <span>loading</span>
+                        <div class="dependant-loader"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="formGroup">
+                <label>{{fields.tolerance.label}}</label>
+                <div class="multiInputField">
+                    <input *ngIf="singleTolerance; else multiTolerance" type="number" min="0" class="form-control d-inline-block tol-1" formControlName="tolerance"
+                        [ngClass]="setFieldClasses('tolerance')">
+                    <ng-template #multiTolerance>
+                        <input type="number" min="0" class="form-control d-inline-block tol-2" formControlName="toleranceMin"
+                            [ngClass]="setFieldClasses('toleranceMin')">
+                        <input type="number" min="0" class="form-control d-inline-block tol-2" formControlName="toleranceMax"
+                            [ngClass]="setFieldClasses('toleranceMax')" [style.border]="itemDetails_form.errors?.maxToleranceLessThanItemQty ? '1px solid red' : '' " [attr.title]="itemDetails_form.errors?.maxToleranceLessThanItemQty ? 'Max Tolerance Value should be greater than Item Quantity' : 'Max Tolerance' ">
+                    </ng-template>
+                    <select class="form-control d-inline-block tol-type" formControlName="toleranceType" (change)="getSelectedTxt($event,'toleranceType')"
+                        [ngClass]="setFieldClasses('toleranceType')">
+                        <option *ngFor="let option of fields.toleranceType.options" [value]="option.key">
+                            {{option.value}}</option>
+                    </select>
+                    <select class="form-control d-inline-block tol-level" formControlName="toleranceLevel" (change)="getSelectedTxt($event,'toleranceLevel')"
+                        [ngClass]="setFieldClasses('toleranceLevel')">
+                        <option [ngValue]="null" class="placeholder">Select</option>
+                        <option *ngFor="let option of fields.toleranceLevel.options" [value]="option.key">
+                            {{option.value}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="formGroup">
+                <label>{{fields.deliveryPeriod.label}}</label>
+                <div class="datePeriod">
+                    <my-date-picker type="date" title=" valid date format : DD-MMM-YYYY " class="mydate-picker two-field" id="deliveryFromDate"
+                        formControlName="deliveryFromDate" [options]="deliveryFromDateOptions"
+                        (dateChanged)="onDateChangedDeliveryPeriod($event);getSelectedTxt($event,'deliveryFromDate','date')"></my-date-picker>
+                    <span class="date-space"> - </span>
+                    <my-date-picker (dateChanged)="onDateChanged($event,'deliveryToDate');getSelectedTxt($event,'deliveryToDate','date')" type="date" title=" valid date format : DD-MMM-YYYY "
+                        class="mydate-picker two-field" id="deliveryToDate" formControlName="deliveryToDate"
+                        [options]="deliveryToDateOptions"></my-date-picker>
+                </div>
+            </div>
+            <div class="formGroup">
+                <label>{{fields.dailyMonthly.label}}</label>
+                <div class="multiInputField dailyMonthly">
+                    <select class="form-control d-inline-block dm-fields" formControlName="dailyMonthly" >
+                        <option [ngValue]="null" class="placeholder">Select</option>
+                        <option *ngFor="let option of fields.dailyMonthly.options" [value]="option.key">
+                            {{option.value}}</option>
+                    </select>
+                    <input type="number" min="1" class="form-control d-inline-block dm-fields" formControlName="dailyMonthlyQty"
+                        [ngClass]="setFieldClasses('itemQty')">
+                    <select class="form-control d-inline-block dm-fields" formControlName="dailyMonthlyUnit">
+                        <option [ngValue]="null" class="placeholder">Select</option>
+                        <option *ngFor="let option of fields.itemQtyUnitId.options" [value]="option.key">
+                            {{option.value}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="formGroup">
+                <label>{{fields.shipmentMode.label}}</label>
+                <select class="form-control" formControlName="shipmentMode" [ngClass]="setFieldClasses('shipmentMode')" (change)="getSelectedTxt($event,'shipmentMode')">
+                    <option [ngValue]="null" class="placeholder">Select</option>
+                    <option *ngFor="let option of fields.shipmentMode.options" [value]="option.key">{{option.value}}
+                    </option>
+                </select>
+            </div>
+            <div class="formGroup">
+                <label>Ship/Vessel Details</label>
+                <input type="text" class="form-control" formControlName="shipVesselDetails">
+            </div>
+        </div>
+        <RINs *ngIf="fields && itemDetails_form && isRenewable" [fields]="fields" [renewableForm]="itemDetails_form" [finalValidation]="finalValidation"></RINs>
+        <div class="lbgp pricingGroup" formGroupName="pricing">
+            <div class="d-flex flex-wrap lbg">
+                <div class="formGroup">
+                    <label>{{fields.payInCurId.label}}</label>
+                    <select class="form-control" formControlName="payInCurId" (change)="getSelectedTxt($event,'payInCurId')"
+                        [ngClass]="setPricingFieldClasses('payInCurId')">
+                        <option [ngValue]="null" class="placeholder">Select</option>
+                        <option *ngFor="let option of fields.payInCurId.options" [value]="option.key">
+                            {{option.value}}</option>
+                    </select>
+                </div>
+                <div class="formGroup">
+                    <label>{{fields.priceTypeId.label}}</label>
+                    <div>
+                        <select class="form-control d-inline-block" formControlName="priceTypeId" (change)="getSelectedTxt($event,'priceTypeId')"
+                            [ngClass]="setPricingFieldClasses('priceTypeId')">
+                            <option [ngValue]="null" class="placeholder">Select</option>
+                            <option *ngFor="let option of fields.priceTypeId.options" [value]="option.key">
+                                {{option.value}}</option>
+                        </select>
+                        <div *ngIf="getControl('priceTypeId','pricing').errors?.loading" class="select-loading-id">
+                            <span>loading</span>
+                            <div class="dependant-loader"></div>
+                        </div>
+                    </div>
+                </div>
+                <ng-container *ngIf="!priceTypeId">
+                    <span></span>
+                </ng-container>
+                <ng-container *ngIf="priceTypeId==='Flat'">
+                    <div class="formGroup">
+                        <label>{{fields.priceDf.label}}</label>
+                        <div class="multiInputField">
+                            <input type="number" class="form-control d-inline-block two-field" formControlName="priceDf"
+                                [ngClass]="setPricingFieldClasses('priceDf')">
+                            <select class="form-control d-inline-block two-field" formControlName="priceUnitId"
+                             [ngClass]="setPricingFieldClasses('priceUnitId')">
+                                <option [ngValue]="null" class="placeholder">Select</option>
+                                <option *ngFor="let option of fields.priceUnitId.options" [value]="option.key">
+                                    {{option.value}}</option>
+                            </select>
+                            <div *ngIf="getControl('priceUnitId','pricing').errors?.loading"
+                                class="select-loading-multi">
+                                <span>loading</span>
+                                <div class="dependant-loader"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="formGroup">
+                        <label>{{fields.fxBasisToPayin.label}}</label>
+                        <div class="multiInputField">
+                            <input type="number" class="form-control d-inline-block one-field"
+                                formControlName="fxBasisToPayin" [ngClass]="setPricingFieldClasses('fxBasisToPayin')">
+                            <!-- <select class="form-control d-inline-block w-40">
+                                <option [ngValue]="null" class="placeholder">Select</option>
+                                <option *ngFor="let option of fields.fxBasisToPayinUnit.options" [value]="option.key">
+                                    {{option.value}}</option>
+                            </select> -->
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="priceTypeId==='Absolute'">
+                    <div class="formGroup">
+                        <label>{{fields.priceDf.label}}</label>
+                        <div class="multiInputField">
+                            <input type="number" class="form-control d-inline-block two-field" formControlName="priceDf"
+                                [ngClass]="setPricingFieldClasses('priceDf')">
+                            <select class="form-control d-inline-block two-field" formControlName="priceUnitId"
+                             [ngClass]="setPricingFieldClasses('priceUnitId')">
+                                <option [ngValue]="null" class="placeholder">Select</option>
+                                <option *ngFor="let option of fields.priceUnitId.options" [value]="option.key">
+                                    {{option.value}}</option>
+                            </select>
+                            <div *ngIf="getControl('priceUnitId','pricing').errors?.loading"
+                                class="select-loading-multi">
+                                <span>loading</span>
+                                <div class="dependant-loader"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="formGroup">
+                        <label>{{fields.fxBasisToPayin.label}}</label>
+                        <div class="multiInputField">
+                            <input type="number" class="form-control d-inline-block one-field"
+                                formControlName="fxBasisToPayin" [ngClass]="setPricingFieldClasses('fxBasisToPayin')">
+                            <!-- <select class="form-control d-inline-block w-40">
+                                <option [ngValue]="null" class="placeholder">Select</option>
+                                <option *ngFor="let option of fields.fxBasisToPayinUnit.options" [value]="option.key">
+                                    {{option.value}}</option>
+                            </select> -->
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="priceTypeId==='Fixed'">
+                    <div class="formGroup">
+                        <label>{{fields.priceContractDefId.label}}</label>
+                        <div>
+                            <select class="form-control d-inline-block" formControlName="priceContractDefId"
+                                (change)="dropdownChanged($event, 'futureInstrumentText', 'pricing')"
+                                [ngClass]="setPricingFieldClasses('priceContractDefId')">
+                                <option [ngValue]="null" class="placeholder">Select</option>
+                                <option *ngFor="let option of fields.priceContractDefId.options" [value]="option.key">
+                                    {{option.value}}</option>
+                            </select>
+                            <div *ngIf="getControl('priceContractDefId','pricing').errors?.loading"
+                                class="select-loading-id">
+                                <span>loading</span>
+                                <div class="dependant-loader"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="formGroup">
+                        <label>{{fields.priceFutureContractId.label}}</label>
+                        <div>
+                            <select class="form-control d-inline-block" formControlName="priceFutureContractId"
+                                (change)="dropdownChanged($event,'priceMonthText','pricing')"
+                                [ngClass]="setPricingFieldClasses('priceFutureContractId')">
+                                <option [ngValue]="null" class="placeholder">Select</option>
+                                <option *ngFor="let option of fields.priceFutureContractId.options"
+                                    [value]="option.key">
+                                    {{option.value}}</option>
+                            </select>
+                        </div>
+                        <div *ngIf="getControl('priceFutureContractId','pricing').errors?.loading"
+                            class="select-loading-id">
+                            <span>loading</span>
+                            <div class="dependant-loader"></div>
+                        </div>
+                    </div>
+                    <div class="formGroup">
+                        <label>{{fields.futurePrice.label}}</label>
+                        <div class="multiInputField">
+                            <input type="number" class="form-control d-inline-block two-field"
+                                formControlName="futurePrice" [ngClass]="setPricingFieldClasses('futurePrice')">
+                            <select class="form-control d-inline-block two-field" formControlName="futurePriceUnitId"
+                                [ngClass]="setPricingFieldClasses('futurePriceUnitId')">
+                                <option [ngValue]="null" class="placeholder">Select</option>
+                                <option *ngFor="let option of fields.priceUnitId.options" [value]="option.key">
+                                    {{option.value}}</option>
+                            </select>
+                            <div *ngIf="getControl('futurePriceUnitId','pricing').errors?.loading"
+                                class="select-loading-multi">
+                                <span>loading</span>
+                                <div class="dependant-loader"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="formGroup">
+                        <label>{{fields.basisPrice.label}}</label>
+                        <div class="multiInputField">
+                            <input type="number" class="form-control d-inline-block two-field"
+                                formControlName="basisPrice" [ngClass]="setPricingFieldClasses('basisPrice')">
+                            <select class="form-control d-inline-block two-field" formControlName="basisPriceUnitId"
+                                [ngClass]="setPricingFieldClasses('basisPriceUnitId')">
+                                <option [ngValue]="null" class="placeholder">Select</option>
+                                <option *ngFor="let option of fields.priceUnitId.options" [value]="option.key">
+                                    {{option.value}}</option>
+                            </select>
+                            <div *ngIf="getControl('basisPriceUnitId','pricing').errors?.loading"
+                                class="select-loading-multi">
+                                <span>loading</span>
+                                <div class="dependant-loader"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="formGroup">
+                        <label>{{fields.fxInstToBasis.label}}</label>
+                        <div>
+                            <input type="number" class="form-control d-inline-block" formControlName="fxInstToBasis"
+                                [ngClass]="setPricingFieldClasses('fxInstToBasis')">
+                        </div>
+                    </div>
+                    <div class="formGroup">
+                        <label>{{fields.fxBasisToPayin.label}}</label>
+                        <div>
+                            <input type="number" class="form-control d-inline-block" formControlName="fxBasisToPayin"
+                                [ngClass]="setPricingFieldClasses('fxBasisToPayin')">
+                        </div>
+                    </div>
+                    <!-- <div class="formGroup">
+                        <label>{{fields.optional.label}}</label>
+                        <div>
+                            <span class="form-control d-inline-block checkbox-control">
+                                <input type="checkbox" class="d-inline-block" formControlName="priceInclusiveOfTax">
+                                <span class="d-inline-block pl-2">
+                                     {{fields.priceInclusiveOfTax.label}}
+                                </span>
+                            </span>
+                        </div>
+                    </div> -->
+                    <div class="formGroup">
+                        <label>{{fields.priceDf.label}}</label>
+                        <div class="multiInputField">
+                            <input type="number" class="form-control d-inline-block two-field" formControlName="priceDf"
+                                [ngClass]="setPricingFieldClasses('priceDf')">
+                            <select class="form-control d-inline-block two-field" formControlName="priceUnitId"
+                                [ngClass]="setPricingFieldClasses('priceUnitId')">
+                                <option [ngValue]="null" class="placeholder">Select</option>
+                                <option *ngFor="let option of fields.priceUnitId.options" [value]="option.key">
+                                    {{option.value}}</option>
+                            </select>
+                            <div *ngIf="getControl('priceUnitId','pricing').errors?.loading"
+                                class="select-loading-multi">
+                                <span>loading</span>
+                                <div class="dependant-loader"></div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="priceTypeId==='FormulaPricing' || priceTypeId==='FormulaPricingComponent'">
+                    <div class="formGroup">
+                        <label>{{fields.priceUnitId.label}}</label>
+                        <div>
+                            <select class="form-control d-inline-block" formControlName="priceUnitId"
+                                [ngClass]="setPricingFieldClasses('priceUnitId')">
+                                <option [ngValue]="null" class="placeholder">Select</option>
+                                <option *ngFor="let option of fields.priceUnitId.options" [value]="option.key">
+                                    {{option.value}}</option>
+                            </select>
+                            <div *ngIf="getControl('priceUnitId','pricing').errors?.loading" class="select-loading-id">
+                                <span>loading</span>
+                                <div class="dependant-loader"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="formGroup" *ngIf="priceTypeId==='FormulaPricing'">
+                        <label>{{fields.pricingStrategy.label}}</label>
+                        <select class="form-control" formControlName="pricingStrategy" (change)="getSelectedTxt($event,'pricingStrategy')" [ngClass]="setPricingFieldClasses('pricingStrategy')">
+                            <option [ngValue]="null" class="placeholder">Select</option>
+                            <option *ngFor="let option of fields.pricingStrategy.options" [value]="option.key">{{option.value}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="formGroup"> 
+                        <split-item  #split [splitRanges]="splitRanges" [range]="range" [checkItemQty]="checkItemQty" [contractDetails]="contractData" [gmrDetailsQty]="gmrDetailsQty" [splitsAvailableForItem]="splitsAvailableForItem" [gmrAvailableForItem]="gmrAvailableForItem" (splitAction)="getSplitAction($event)"></split-item>
+                    </div>
+                    <div class="formGroup"> 
+                        <div class="component-link">
+                            <span class="popup-link" [ngStyle]="{'pointer-events' : checkItemQty ? 'none' : 'all'}" (click)="openNewWindow()">
+                                Components
+                            </span>
+                        </div>
+                    </div>
+                    <div class="formGroup" *ngIf="itemDetails_form.getRawValue().pricing.pricingStrategy==='pricingStrategy-001'">
+                        <label>{{fields.formula.label}}</label>
+                        <div class="multiInputField">
+                            <pricing-popup (click)="pricingTriggerFor='priceTypeId'" (change)='showdetails()'
+                                [formulaName]="pricingFormulaName" [checkItemQty]="checkItemQty" [contractDetails]="contractData"
+                                [currentItem]="currentItem" [itemIndex]="itemIndex" [mdmPriceUnit]="fields.priceUnitId.options"
+                                class="formula-valid" [ngClass]="setFormulaIdClass()">
+                            </pricing-popup>
+                            <input type="hidden" formControlName="pricingFormulaId">
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="priceTypeId==='On Call Basis Fixed'">
+                    <div class="formGroup">
+                        <label>{{fields.priceContractDefId.label}}</label>
+                        <div>
+                            <select class="form-control d-inline-block" formControlName="priceContractDefId"
+                                (change)="dropdownChanged($event, 'futureInstrumentText', 'pricing')"
+                                [ngClass]="setPricingFieldClasses('priceContractDefId')">
+                                <option [ngValue]="null" class="placeholder">Select</option>
+                                <option *ngFor="let option of fields.priceContractDefId.options" [value]="option.key">
+                                    {{option.value}}</option>
+                            </select>
+                            <div *ngIf="getControl('priceContractDefId','pricing').errors?.loading"
+                                class="select-loading-id">
+                                <span>loading</span>
+                                <div class="dependant-loader"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="formGroup">
+                        <label>{{fields.priceFutureContractId.label}}</label>
+                        <div>
+                            <select class="form-control d-inline-block" formControlName="priceFutureContractId"
+                                (change)="dropdownChanged($event,'priceMonthText','pricing')"
+                                [ngClass]="setPricingFieldClasses('priceFutureContractId')">
+                                <option [ngValue]="null" class="placeholder">Select</option>
+                                <option *ngFor="let option of fields.priceFutureContractId.options"
+                                    [value]="option.key">
+                                    {{option.value}}</option>
+                            </select>
+                        </div>
+                        <div *ngIf="getControl('priceFutureContractId','pricing').errors?.loading"
+                            class="select-loading-id">
+                            <span>loading</span>
+                            <div class="dependant-loader"></div>
+                        </div>
+                    </div>
+                    <div class="formGroup">
+                        <label>{{fields.basisPrice.label}}</label>
+                        <div class="multiInputField">
+                            <input type="number" class="form-control d-inline-block two-field"
+                                formControlName="basisPrice" [ngClass]="setPricingFieldClasses('basisPrice')">
+                            <select class="form-control d-inline-block two-field" formControlName="basisPriceUnitId"
+                                [ngClass]="setPricingFieldClasses('basisPriceUnitId')">
+                                <option [ngValue]="null" class="placeholder">Select</option>
+                                <option *ngFor="let option of fields.priceUnitId.options" [value]="option.key">
+                                    {{option.value}}</option>
+                            </select>
+                            <div *ngIf="getControl('basisPriceUnitId','pricing').errors?.loading"
+                                class="select-loading-multi">
+                                <span>loading</span>
+                                <div class="dependant-loader"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="formGroup">
+                        <label>{{fields.earliestBy.label}}</label>
+                        <my-date-picker type="date" class="mydate-picker d-block" formControlName="earliestBy"
+                            [options]="pricingDatePicker">
+                        </my-date-picker>
+                    </div>
+                    <div class="formGroup">
+                        <label>{{fields.priceLastFixDayBasedOn.label}}</label>
+                        <div>
+                            <select class="form-control d-inline-block" formControlName="priceLastFixDayBasedOn"
+                                [ngClass]="setPricingFieldClasses('priceLastFixDayBasedOn')">
+                                <option [ngValue]="null" class="placeholder">Select</option>
+                                <option *ngFor="let option of fields.priceLastFixDayBasedOn.options"
+                                    [value]="option.key">
+                                    {{option.value}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="formGroup">
+                        <label>{{fields.optionsToFix.label}}</label>
+                        <div>
+                            <select class="form-control d-inline-block" formControlName="optionsToFix"
+                                [ngClass]="setPricingFieldClasses('optionsToFix')">
+                                <option [ngValue]="null" class="placeholder">Select</option>
+                                <option *ngFor="let option of fields.optionsToFix.options" [value]="option.key">
+                                    {{option.value}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="formGroup">
+                        <label>{{fields.fixationMethod.label}}</label>
+                        <div>
+                            <select class="form-control d-inline-block" formControlName="fixationMethod"
+                                [ngClass]="setPricingFieldClasses('fixationMethod')">
+                                <option [ngValue]="null" class="placeholder">Select</option>
+                                <option *ngFor="let option of fields.fixationMethod.options" [value]="option.key">
+                                    {{option.value}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="priceTypeId==='Futures First'">
+                    <div class="formGroup">
+                        <label>{{fields.priceContractDefId.label}}</label>
+                        <div>
+                            <select class="form-control d-inline-block" formControlName="priceContractDefId"
+                                (change)="dropdownChanged($event, 'futureInstrumentText', 'pricing')"
+                                [ngClass]="setPricingFieldClasses('priceContractDefId')">
+                                <option [ngValue]="null" class="placeholder">Select</option>
+                                <option *ngFor="let option of fields.priceContractDefId.options" [value]="option.key">
+                                    {{option.value}}</option>
+                            </select>
+                            <div *ngIf="getControl('priceContractDefId','pricing').errors?.loading"
+                                class="select-loading-id">
+                                <span>loading</span>
+                                <div class="dependant-loader"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="formGroup">
+                        <label>{{fields.priceFutureContractId.label}}</label>
+                        <div>
+                            <select class="form-control d-inline-block" formControlName="priceFutureContractId"
+                                (change)="dropdownChanged($event,'priceMonthText','pricing')"
+                                [ngClass]="setPricingFieldClasses('priceFutureContractId')">
+                                <option [ngValue]="null" class="placeholder">Select</option>
+                                <option *ngFor="let option of fields.priceFutureContractId.options"
+                                    [value]="option.key">
+                                    {{option.value}}</option>
+                            </select>
+                        </div>
+                        <div *ngIf="getControl('priceFutureContractId','pricing').errors?.loading"
+                            class="select-loading-id">
+                            <span>loading</span>
+                            <div class="dependant-loader"></div>
+                        </div>
+                    </div>
+                    <div class="formGroup">
+                        <label>{{fields.futurePrice.label}}</label>
+                        <div class="multiInputField">
+                            <input type="number" class="form-control d-inline-block two-field"
+                                formControlName="futurePrice" [ngClass]="setPricingFieldClasses('futurePrice')">
+                            <select class="form-control d-inline-block two-field" formControlName="futurePriceUnitId"
+                                [ngClass]="setPricingFieldClasses('futurePriceUnitId')">
+                                <option [ngValue]="null" class="placeholder">Select</option>
+                                <option *ngFor="let option of fields.priceUnitId.options" [value]="option.key">
+                                    {{option.value}}</option>
+                            </select>
+                            <div *ngIf="getControl('futurePriceUnitId','pricing').errors?.loading"
+                                class="select-loading-multi">
+                                <span>loading</span>
+                                <div class="dependant-loader"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="formGroup">
+                        <label>{{fields.basisPrice.label}}</label>
+                        <div class="multiInputField">
+                            <input type="number" class="form-control d-inline-block two-field"
+                                formControlName="basisPrice" [ngClass]="setPricingFieldClasses('basisPrice')">
+                            <select class="form-control d-inline-block two-field" formControlName="basisPriceUnitId"
+                                [ngClass]="setPricingFieldClasses('basisPriceUnitId')">
+                                <option [ngValue]="null" class="placeholder">Select</option>
+                                <option *ngFor="let option of fields.priceUnitId.options" [value]="option.key">
+                                    {{option.value}}</option>
+                            </select>
+                            <div *ngIf="getControl('basisPriceUnitId','pricing').errors?.loading"
+                                class="select-loading-multi">
+                                <span>loading</span>
+                                <div class="dependant-loader"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="formGroup">
+                        <label>{{fields.earliestBy.label}}</label>
+                        <my-date-picker type="date" class="mydate-picker d-block" formControlName="earliestBy"
+                            [options]="pricingDatePicker">
+                        </my-date-picker>
+                    </div>
+                    <div class="formGroup">
+                        <label>{{fields.priceLastFixDayBasedOn.label}}</label>
+                        <div>
+                            <select class="form-control d-inline-block" formControlName="priceLastFixDayBasedOn"
+                                [ngClass]="setPricingFieldClasses('priceLastFixDayBasedOn')">
+                                <option [ngValue]="null" class="placeholder">Select</option>
+                                <option *ngFor="let option of fields.priceLastFixDayBasedOn.options"
+                                    [value]="option.key">
+                                    {{option.value}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="formGroup">
+                        <label>{{fields.optionsToFix.label}}</label>
+                        <div>
+                            <select class="form-control d-inline-block" formControlName="optionsToFix"
+                                [ngClass]="setPricingFieldClasses('optionsToFix')">
+                                <option [ngValue]="null" class="placeholder">Select</option>
+                                <option *ngFor="let option of fields.optionsToFix.options" [value]="option.key">
+                                    {{option.value}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="formGroup">
+                        <label>{{fields.fixationMethod.label}}</label>
+                        <div>
+                            <select class="form-control d-inline-block" formControlName="fixationMethod"
+                                [ngClass]="setPricingFieldClasses('fixationMethod')">
+                                <option [ngValue]="null" class="placeholder">Select</option>
+                                <option *ngFor="let option of fields.fixationMethod.options" [value]="option.key">
+                                    {{option.value}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </ng-container>
+                <!-- <div class="formGroup">
+                        <label>{{fields.qualityPdScheduleId.label}}</label>
+                        <div class="multiInputField">
+                            <select class="form-control" formControlName="qualityPdScheduleId"
+                                >
+                                <option [ngValue]="null" class="placeholder">Select</option>
+                                <option *ngFor="let option of fields.qualityPdScheduleId.options" [value]="option.key">{{option.value}}
+                                </option>
+                            </select>
+                        </div>
+                    </div> -->
+            </div>
+            <div class="d-flex splitBox lbg" *ngIf="itemDetails_form.getRawValue().pricing.pricingStrategy === 'pricingStrategy-002' || itemDetails_form.getRawValue().pricing.pricingStrategy === 'pricingStrategy-003'">
+                <ul class="flex-container space-evenly" *ngIf="splitRanges && !loadingSplits">
+                    <li *ngFor="let split of splitRanges;let i = index" class="flex-item"> 
+                    {{split.rangeStart}} - {{split.rangeEnd}}
+                    <div class="pricingBox">
+                        <pricing-popup (click)="pricingTriggerFor=['tieredPricing',i]" (change)='showdetails()'
+                            [formulaName]="pricingFormulaNameArray[i]" [checkItemQty]="split.showOptions" [formulaId]="splitFormula[i]"  [contractDetails]="contractSplitData[i]"
+                            [currentItem]="currentItem" [itemIndex]="itemIndex" [mdmPriceUnit]="fields.priceUnitId.options"
+                            class="formula-valid" [ngClass]="setTieredPricingFieldClasses(i)">
+                        </pricing-popup>
+                    </div>
+                </li>
+                </ul>
+                <ul *ngIf="loadingSplits" class="flex-container space-evenly loadingSplits">
+                    <div class="dependant-loader"></div>
+                </ul>
+                <button class="alignEdit" (click)="openSplit()"><i class="fa fa-pencil fa-md" aria-hidden="true" ></i></button>
+           </div>
+        </div>
+
+        <div class="d-flex flex-wrap">
+            <div class="formGroup">
+                <label>{{fields.originationCountryId.label}} <span class="optionalLabel" *ngIf="originationOptional">{{optionalLabel}}</span></label>
+                <select class="form-control" formControlName="originationCountryId" (change)="getSelectedTxt($event,'originationCountryId')"
+                    [ngClass]="setFieldClasses('originationCountryId')">
+                    <option [ngValue]="null" class="placeholder">Select</option>
+                    <option *ngFor="let option of fields.originationCountryId.options" [value]="option.key">
+                        {{option.value}}</option>
+                </select>
+            </div>
+            <div>
+                <div class="formGroup">
+                    <label>{{fields.loadingLocationGroupTypeId.label}} <span class="optionalLabel" *ngIf="originationOptional">{{optionalLabel}}</span></label>
+                    <div class="multiInputField">
+                        <select class="form-control d-inline-block two-field"
+                            formControlName="loadingLocationGroupTypeId" (change)="getSelectedTxt($event,'loadingLocationGroupTypeId')"
+                            [ngClass]="setFieldClasses('loadingLocationGroupTypeId')">
+                            <option [ngValue]="null" class="placeholder">Select</option>
+                            <option *ngFor="let option of fields.loadingLocationGroupTypeId.options"
+                                [value]="option.key">{{option.value}}</option>
+                        </select>
+                        <select class="form-control d-inline-block two-field" formControlName="originationCityId" (change)="getSelectedTxt($event,'originationCityId')"
+                            [ngClass]="setFieldClasses('originationCityId')">
+                            <option [ngValue]="null" class="placeholder">Select</option>
+                            <option *ngFor="let option of fields.originationCityId.options" [value]="option.key">
+                                {{option.value}}</option>
+                        </select>
+                        <div *ngIf="getControl('originationCityId').errors?.loading" class="select-loading-multi">
+                            <span>loading</span>
+                            <div class="dependant-loader"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="formGroup">
+                <label>{{fields.destinationCountryId.label}} <span class="optionalLabel" *ngIf="destinationOptional">{{optionalLabel}}</span></label>
+                <select class="form-control" formControlName="destinationCountryId" (change)="getSelectedTxt($event,'destinationCountryId')"
+                    [ngClass]="setFieldClasses('destinationCountryId')">
+                    <option [ngValue]="null" class="placeholder">Select</option>
+                    <option *ngFor="let option of fields.destinationCountryId.options" [value]="option.key">
+                        {{option.value}}</option>
+                </select>
+            </div>
+            <div class="formGroup">
+                <label>{{fields.destinationLocationGroupTypeId.label}} <span class="optionalLabel" *ngIf="destinationOptional">{{optionalLabel}}</span> </label>
+                <div class="multiInputField">
+                    <select class="form-control  d-inline-block two-field"
+                        formControlName="destinationLocationGroupTypeId" (change)="getSelectedTxt($event,'destinationLocationGroupTypeId')"
+                        [ngClass]="setFieldClasses('destinationLocationGroupTypeId')">
+                        <option [ngValue]="null" class="placeholder">Select</option>
+                        <option *ngFor="let option of fields.destinationLocationGroupTypeId.options"
+                            [value]="option.key">{{option.value}}</option>
+                    </select>
+                    <select class="form-control d-inline-block two-field" formControlName="destinationCityId" (change)="getSelectedTxt($event,'destinationCityId')"
+                        [ngClass]="setFieldClasses('destinationCityId')">
+                        <option [ngValue]="null" class="placeholder">Select</option>
+                        <option *ngFor="let option of fields.destinationCityId.options" [value]="option.key">
+                            {{option.value}}</option>
+                    </select>
+                    <div *ngIf="getControl('destinationCityId').errors?.loading" class="select-loading-multi">
+                        <span>loading</span>
+                        <div class="dependant-loader"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex flex-wrap lbg">
+            <div class="formGroup">
+                <label>{{fields.paymentDueDate.label}}</label>
+                <my-date-picker id="paymentDueDate" type="date" title=" valid date format : DD-MMM-YYYY " (dateChanged)="onDateChanged($event,'paymentDueDate');getSelectedTxt($event,'paymentDueDate','date')"
+                    class="mydate-picker d-block" formControlName="paymentDueDate"
+                    [options]="datePickerAbove">
+                </my-date-picker>
+            </div>
+            <div class="formGroup">
+                <label>{{fields.profitCenterId.label}}</label>
+                <select class="form-control" formControlName="profitCenterId" (change)="getSelectedTxt($event,'profitCenterId')"
+                    [ngClass]="setFieldClasses('profitCenterId')">
+                    <option [ngValue]="null" class="placeholder">Select</option>
+                    <option *ngFor="let option of fields.profitCenterId.options" [value]="option.key">{{option.value}}
+                    </option>
+                </select>
+            </div>
+            <div *ngIf="contractData?.dealType === 'Inter_Company' || contractData?.dealType === 'Intra_Company'" class="formGroup">
+                <label>{{fields.internalProfitCenterId.label}}</label>
+                <select class="form-control" formControlName="internalProfitCenterId" (change)="getSelectedTxt($event,'internalProfitCenterId')"
+                    [ngClass]="setFieldClasses('internalProfitCenterId')">
+                    <option [ngValue]="null" class="placeholder">Select</option>
+                    <option *ngFor="let option of fields.internalProfitCenterId.options" [value]="option.key">{{option.value}}
+                    </option>
+                </select>
+            </div>
+            <div class="formGroup">
+                <label>{{fields.strategyAccId.label}}</label>
+                <select class="form-control" formControlName="strategyAccId" (change)="getSelectedTxt($event,'strategyAccId')"
+                    [ngClass]="setFieldClasses('strategyAccId')">
+                    <option [ngValue]="null" class="placeholder">Select</option>
+                    <option *ngFor="let option of fields.strategyAccId.options" [value]="option.key">{{option.value}}
+                    </option>
+                </select>
+            </div>
+             <!-- <div class="formGroup">
+                <label>{{fields.valuationFormula.label}}</label>
+                <div class="multiInputField">
+                    <pricing-popup (click)="getValuationData()" (change)='showdetails()'
+                        [valuation]="true" [formulaName]="valuationFormulaName" [contractDetails]="valuationData"
+                        [itemIndex]="itemIndex" [mdmPriceUnit]="fields.priceUnitId.options"
+                        class="formula-valid">
+                    </pricing-popup>
+                    <input type="hidden" formControlName="valuationFormula">
+                </div>
+            </div> -->
+        </div>
+        <div class="d-flex flex-wrap">
+            <div *ngIf="contractData?.dealType === 'Inter_Company' || contractData?.dealType === 'Intra_Company'" class="formGroup">
+                <label>{{fields.internalStrategyAccId.label}}</label>
+                <select class="form-control" formControlName="internalStrategyAccId" (change)="getSelectedTxt($event,'internalStrategyAccId')"
+                    [ngClass]="setFieldClasses('internalStrategyAccId')">
+                    <option [ngValue]="null" class="placeholder">Select</option>
+                    <option *ngFor="let option of fields.internalStrategyAccId.options" [value]="option.key">{{option.value}}
+                    </option>
+                </select>
+            </div>
+            <div class="formGroup">
+                <label>{{fields.taxScheduleCountryId.label}}</label>
+                <select class="form-control" formControlName="taxScheduleCountryId" (change)="getSelectedTxt($event,'taxScheduleCountryId')"
+                    [ngClass]="setFieldClasses('taxScheduleCountryId')">
+                    <option [ngValue]="null" class="placeholder">Select</option>
+                    <option *ngFor="let option of fields.taxScheduleCountryId.options" [value]="option.key">{{option.value}}
+                    </option>
+                </select>
+            </div>
+            <div class="formGroup">
+                <label>{{fields.taxScheduleId.label}}</label>
+                <div>
+                    <select class="form-control d-inline-block" formControlName="taxScheduleId" (change)="getSelectedTxt($event,'taxScheduleId')"
+                        [ngClass]="setFieldClasses('taxScheduleId')">
+                        <option [ngValue]="null" class="placeholder">Select</option>
+                        <option *ngFor="let option of fields.taxScheduleId.options" [value]="option.key">{{option.value}}</option>
+                    </select>
+                </div>
+                <div *ngIf="getControl('taxScheduleId').errors?.loading" class="select-loading-id">
+                    <span>loading</span>
+                    <div class="dependant-loader"></div>
+                </div>
+            </div>
+            <div class="formGroup">
+                <label>{{fields.secondaryCost.label}}</label>
+                <div>
+                    <app-secondary-cost-popup [fields]="fields" [contract]="contractData" [id]="contractId"
+                        [itemIndex]="itemIndex" [itemQty]="getValue('itemQty')"
+                        [itemQtyUnitId]="getValue('itemQtyUnitId')" [estimates]="getEstimates()"
+                        (addSecCost)="addSecondaryCost($event)"></app-secondary-cost-popup>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex flex-wrap">
+            <div class="d-flex flex-wrap" formGroupName="contractItemValuationDTO">
+                <div class="formGroup">
+                    <label>{{fields.valuationIncotermId.label}}</label>
+                    <select class="form-control" formControlName="valuationIncotermId" (change)="getSelectedTxt($event,'valuationIncotermId')"
+                        [ngClass]="setFieldClasses('valuationIncotermId','contractItemValuationDTO')">
+                        <option [ngValue]="null" class="placeholder">Select</option>
+                        <option *ngFor="let option of fields.valuationIncotermId.options" [value]="option.key">
+                            {{option.value}}</option>
+                    </select>
+                </div>
+                <div class="formGroup">
+                    <label>{{fields.valuationCountryId.label}}</label>
+                    <select class="form-control" formControlName="valuationCountryId" (change)="getSelectedTxt($event,'valuationCountryId')"
+                        [ngClass]="setFieldClasses('valuationCountryId','contractItemValuationDTO')">
+                        <option [ngValue]="null" class="placeholder">Select</option>
+                        <option *ngFor="let option of fields.valuationCountryId.options" [value]="option.key">
+                            {{option.value}}</option>
+                    </select>
+                </div>
+                <div class="formGroup">
+                <label>{{fields.locGroupTypeId.label}}</label>
+                <div class="multiInputField">
+                    <select class="form-control  d-inline-block two-field"
+                        formControlName="locGroupTypeId" (change)="getSelectedTxt($event,'locGroupTypeId')"
+                        [ngClass]="setFieldClasses('locGroupTypeId','contractItemValuationDTO')">
+                        <option [ngValue]="null" class="placeholder">Select</option>
+                        <option *ngFor="let option of fields.locGroupTypeId.options"
+                            [value]="option.key">{{option.value}}</option>
+                    </select>
+                    <select class="form-control d-inline-block two-field" formControlName="valuationCityId" (change)="getSelectedTxt($event,'valuationCityId')"
+                        [ngClass]="setFieldClasses('valuationCityId','contractItemValuationDTO')">
+                        <option [ngValue]="null" class="placeholder">Select</option>
+                        <option *ngFor="let option of fields.valuationCityId.options" [value]="option.key">
+                            {{option.value}}</option>
+                    </select>
+                    <!-- <div *ngIf="getControl('valuationCityId').errors?.loading" class="select-loading-multi">
+                        <span>loading</span>
+                        <div class="dependant-loader"></div>
+                    </div> -->
+                </div>
+            </div>
+            </div>
+            <div class="formGroup">
+                <label>Invoiceable Qty</label>
+                <select class="form-control" formControlName="isGrossOrNetQty" (change)="getSelectedTxt($event,'isGrossOrNetQty')">
+                    <option value="Y">Gross Qty</option>
+                    <option value="N">Net Qty</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <p-accordion (onOpen)="optionalFlagChanged(true)" (onClose)="optionalFlagChanged(false)">
+      <p-accordionTab [selected]="optionalEnabled()">
+        <p-header class="optional">
+            <label class="italic">{{fields.optional.label}}<span class="optional-fields">{{fields.optionalItemDetails.label}}</span></label>
+        </p-header>
+        <div class="d-flex flex-wrap">
+            <div class="formGroup">
+                <label class="d-block">{{fields.packingTypeId.label}}</label>
+                <div class="multiInputField">
+                    <select class="form-control d-inline-block two-field" formControlName="packingTypeId" (change)="getSelectedTxt($event,'packingTypeId')">
+                        <option [ngValue]="null" class="placeholder">Select</option>
+                        <option *ngFor="let option of fields.packingTypeId.options" [value]="option.key">{{option.value}}
+                        </option>
+                    </select>
+                    <div *ngIf="getControl('packingTypeId').errors?.loading" style="left:12px; top: 37px" class="select-loading-multi">
+                        <span>loading</span>
+                        <div class="dependant-loader"></div>
+                    </div>
+                    <select class="form-control d-inline-block two-field" formControlName="packingSizeId" (change)="getSelectedTxt($event,'packingSizeId')">
+                            <option [ngValue]="null" class="placeholder">Select</option>
+                            <option *ngFor="let option of fields.packingSizeId.options" [value]="option.key">{{option.value}}</option>
+                    </select>
+                    <div *ngIf="getControl('packingSizeId').errors?.loading" style="top: 37px" class="select-loading-multi">
+                        <span>loading</span>
+                        <div class="dependant-loader"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="formGroup" [hidden]="!showPaymentEventDateAndName"> 
+                <label>{{fields.customEvent.label}}</label>
+                <select class="form-control" formControlName="customEvent" (change)="getSelectedTxt($event,'customEvent')">
+                    <option [ngValue]="null" class="placeholder">Select</option>
+                    <option *ngFor="let option of fields.customEvent.options" [value]="option.key">{{option.value}}
+                    </option>
+                </select>
+            </div>
+            <div class="formGroup" [hidden]="!showPaymentEventDateAndName">
+                <label>{{fields.customEventDate.label}}</label>
+                <my-date-picker id="customEventDate" type="date" title=" valid date format : DD-MMM-YYYY " (dateChanged)="onDateChanged($event,'customEventDate')" (inputFocusBlur)="onInputFocusBlur($event)"
+                    class="mydate-picker d-block" formControlName="customEventDate"
+                    [options]="datePickerAbove">
+                </my-date-picker>
+            </div>
+            <div class="formGroup">
+                <label>{{fields.holidayRule.label}}</label>
+                <select class="form-control" formControlName="holidayRule" (change)="getSelectedTxt($event,'holidayRule')">
+                    <option [ngValue]="null" class="placeholder">Select</option>
+                    <option *ngFor="let option of fields.holidayRule.options" [value]="option.key">{{option.value}}
+                    </option>
+                </select>
+            </div>
+            <div class="formGroup">
+                <label>{{fields.taxScheduleStateId.label}}</label>
+                <select class="form-control" formControlName="taxScheduleStateId" (change)="getSelectedTxt($event,'taxScheduleStateId')">
+                    <option [ngValue]="null" class="placeholder">Select</option>
+                    <option *ngFor="let option of fields.taxScheduleStateId.options" [value]="option.key">{{option.value}}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="d-flex flex-wrap">
+            <div class="formGroup">
+                <label>{{fields.cpContractItemId.label}}</label>
+                <input type="text" class="form-control w-240" formControlName="cpContractItemId">
+            </div>
+            <div class="formGroup">
+                <label>{{fields.totalPrice.label}}</label>
+                <input type="text" class="form-control w-108" formControlName="totalPrice">
+            </div>
+            <div class="formGroup">
+                <label>{{fields.ticketNumber.label}}</label>
+                <input type="text" class="form-control w-108" formControlName="ticketNumber">
+            </div>
+            <div class="formGroup">
+                <label>{{fields.qualityShortDesc.label}}</label>
+                <input type="text" class="form-control w-240" formControlName="qualityShortDesc">
+            </div>
+            <div class="formGroup">
+                <label>{{fields.qualityLongDesc.label}}</label>
+                <input type="text" class="form-control w-240" formControlName="qualityLongDesc">
+            </div>
+        </div>
+        <div class="d-flex flex-wrap lbg">
+            <div class="formGroup">
+                <label>{{fields.inspectionCompany.label}}</label>
+                <input type="text" class="form-control w-240" formControlName="inspectionCompany">
+            </div>
+            <div class="d-flex flex-wrap lbg" [formGroup]="latePaymentGroup">
+                <div class="formGroup">
+                    <label>{{fields.interestRateType.label}}</label>
+                    <select class="form-control" formControlName="interestRateType" (change)="getSelectedTxt($event,'interestRateType')">
+                        <option [ngValue]="null" class="placeholder">Select</option>
+                        <option *ngFor="let option of fields.interestRateType.options" [value]="option.key">{{option.value}}
+                        </option>
+                    </select>
+                </div>
+                <div class="formGroup">
+                    <label>{{fields.latePaymentInterestRate.label}}</label>
+                    <div>
+                        <select *ngIf="latePaymentGroup.get('interestRateType').value === 'Variable'"
+                            class="form-control d-inline-block two-field" formControlName="variableType" (change)="getSelectedTxt($event,'variableType')">
+                            <option [ngValue]="null" class="placeholder">Select</option>
+                            <option *ngFor="let option of fields.latePaymentInterestRate.options" [value]="option.key">
+                                {{option.value}}</option>
+                        </select>
+                        <input type="number" min="0" class="form-control d-inline-block w-115" formControlName="interestRate">
+                    </div>
+                </div>
+                <div class="formGroup">
+                    <label>{{fields.latePaymentInterestMethod.label}}</label>
+                    <div>
+                        <input type="checkbox" formControlName="isCompounding"
+                            class="checkbox d-inline-block">{{fields.compounding.label}}
+                        <select *ngIf="latePaymentGroup.get('isCompounding').value"
+                            class="form-control d-inline-block w-44-pct" formControlName="frequency" (change)="getSelectedTxt($event,'frequency')">
+                            <option [ngValue]="null" class="placeholder">Select</option>
+                            <option *ngFor="let option of fields.frequency.options" [value]="option.key">{{option.value}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex flex-wrap">
+            <div class="formGroup">
+                <label>{{fields.provisionalInvoice.label}}</label>
+                <div class="w-240">
+                    <input type="text" class="form-control w-90-pct d-inline-block" formControlName="unweighedPiPctValue">
+                    <span>%</span>
+                </div>
+            </div>
+            <div class="formGroup">
+                <label>{{fields.laycanDate.label}}</label>
+                <div class="datePeriod">
+                    <my-date-picker type="date" title=" valid date format : DD-MMM-YYYY " class="mydate-picker two-field" formControlName="laycanStartDate"
+                        [options]="laycanStartDate" (dateChanged)="onlaycanStartDateChange($event);"></my-date-picker>
+                    <span class="date-space"> - </span>
+                    <my-date-picker type="date" title=" valid date format : DD-MMM-YYYY " class="mydate-picker two-field" formControlName="laycanEndDate"
+                        [options]="laycanEndDate"></my-date-picker>
+                </div>
+            </div>
+            <div class="formGroup">
+                <label>{{ fields.qualityPdScheduleId.label }}</label>
+                <div class="multiInputField">
+                    <select class="form-control" formControlName="qualityPdScheduleId" (change)="getSelectedTxt($event,'qualityPdScheduleId')">
+                        <option [ngValue]="null" class="placeholder">Select</option>
+                        <option *ngFor="let option of fields.qualityPdScheduleId.options" [value]="option.key">
+                            {{ option.value }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="formGroup">
+                <label>{{fields.additionsDeductions.label}}</label>
+                <div>
+                    <app-add-deduction [fields]="fields" [contract]="contractData" [id]="contractId"
+                        [itemIndex]="itemIndex" [currentItem]="currentItem"
+                        [addDed]="getAdditionDeductions()" (addAddDeduction)="addAddDeduction($event)"></app-add-deduction>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex flex-wrap lbg">
+            <div class="formGroup">
+                <label>{{fields.optionalLoadingDetails.label}}</label>
+                <ng-container *ngFor="let opLoad of optionalLoadingDetails.controls; index as i">
+                    <div class="one-three-fourth" [formGroup]="opLoad"
+                        *ngIf="!opLoad.get('optOriginInstanceDeleted').value">
+                        <select class="form-control d-inline-block optionLoad country"
+                            formControlName="originationCountryId">
+                            <option [value]="null" hidden>Loading Country</option>
+                            <option *ngFor="let option of fields.originationCountryId.options" [value]="option.key">
+                                {{option.value}}</option>
+                        </select>
+                        <select class="form-control d-inline-block optionLoad" formControlName="originationCityId">
+                            <option [value]="null" hidden>Loading City</option>
+                            <ng-container *ngIf="fields.optionLoadCity[i]">
+                                <option *ngFor="let option of fields.optionLoadCity[i].options" [value]="option.key">
+                                    {{option.value}}</option>
+                            </ng-container>
+                        </select>
+                        <span class="combo-input">
+                            <input type="number" class="form-control d-inline-block w-20-pct" formControlName="freightDf"
+                                placeholder="Location P/D">
+                            <select class="form-control d-inline-block optionLoad unit"
+                                formControlName="freightDfPriceUnitId">
+                                <option [value]="null" hidden>Price/Qty Unit</option>
+                                <option *ngFor="let option of fields.priceUnitId.options" [value]="option.key">
+                                    {{option.value}}</option>
+                            </select>
+                        </span>
+                        <i class="fas fa-times-circle" (click)="optionLoadRemove(i)"></i>
+                    </div>
+                </ng-container>
+                <div class="popup-link d-inline-block" (click)="addOptionLoad()">{{this.fields.addMore.label}}</div>
+            </div>
+            <div class="formGroup">
+                <label>{{fields.optionalDischargeDetails.label}}</label>
+                <ng-container *ngFor="let opDischarge of optionalDischargeDetails.controls; index as i">
+                    <div class="one-three-fourth" [formGroup]="opDischarge"
+                        *ngIf="!opDischarge.get('optDestInstanceDeleted').value">
+                        <select class="form-control d-inline-block optionLoad country"
+                            formControlName="destinationCountryId">
+                            <option [value]="null" hidden>Discharge Country</option>
+                            <option *ngFor="let option of fields.originationCountryId.options" [value]="option.key">
+                                {{option.value}}</option>
+                        </select>
+                        <select class="form-control d-inline-block optionLoad" formControlName="destinationCityId">
+                            <option [value]="null" hidden>Discharge City</option>
+                            <ng-container *ngIf="fields.optionDischargeCity[i]">
+                                <option *ngFor="let option of fields.optionDischargeCity[i].options"
+                                    [value]="option.key">{{option.value}}</option>
+                            </ng-container>
+                        </select>
+                        <span class="combo-input">
+                            <input type="number" class="form-control d-inline-block w-20-pct" formControlName="freightDf"
+                                placeholder="Location P/D">
+                            <select class="form-control d-inline-block optionLoad unit"
+                                formControlName="freightDfPriceUnitId">
+                                <option [value]="null" hidden>Price/Qty Unit</option>
+                                <option *ngFor="let option of fields.priceUnitId.options" [value]="option.key">
+                                    {{option.value}}</option>
+                            </select>
+                        </span>
+                        <i class="fas fa-times-circle" (click)="optionDischargeRemove(i)"></i>
+                    </div>
+                </ng-container>
+                <div class="popup-link d-inline-block" (click)="addOptionDischarge()">{{this.fields.addMore.label}}
+                </div>
+            </div>
+        </div>
+      </p-accordionTab>
+    </p-accordion>  
+    <div class="optional.value ? '' :'h-100'"></div>
+    <p *ngIf="handleAlert(showWarning)">
+        <ngb-alert type="danger" (close)="closeAlert(alert)">{{errorMsg}}</ngb-alert>
+    </p>
+    <p *ngIf="showSuccess">
+        <ngb-alert type="success" (close)="closeAlert(alert)">{{successMsg}}</ngb-alert>
+    </p>
+</div>
+<!-- <app-save-popup #popup style="display: none"></app-save-popup> -->
+<!-- <p-confirmDialog #cd header="Confirmation" icon="pi pi-exclamation-triangle">
+    <p-footer>
+        <button type="button" pButton label="Create Contract" (click)="cd.accept()"></button>
+        <button type="button" pButton label="Save as draft" (click)="cd.reject()"></button>
+    </p-footer>
+</p-confirmDialog> -->
+
+<app-approve-contract-popup (action)="afterApprovalPopupCreateContract($event)"
+    (cancelApproval)="afterApprovalCancel()"></app-approve-contract-popup>
+
+<app-confirm-popup #itemQtyHandle title="warning" btn1="OK"></app-confirm-popup>
+<app-confirm-popup #confirm btn1="OK"></app-confirm-popup>
+<app-confirm-popup #mdmFailure btn1="REFRESH" (action)="afterMdmFailure()"></app-confirm-popup>
+<app-confirm-popup #contractCreated btn1="OK" (action)="afterContractCreated()" actOnClose="true"></app-confirm-popup>
+<app-confirm-popup #draftCreated btn1="NEXT" btn2="EXIT" (action)="afterDraftCreated($event)"></app-confirm-popup>
+<app-confirm-popup #contractDraftPopup title="Confirmation"
+    body="Do you want to create contract with 1 item or save as draft?" btn1="SAVE AS CONTRACT" btn2="SAVE AS DRAFT"
+    (action)="confirmSaveContractOrDraft($event)"></app-confirm-popup>
+<app-confirm-popup #reqFailed title="Alert" btn1="OK"></app-confirm-popup>

@@ -1,0 +1,25 @@
+<div *ngIf="renewableForm">
+  <div class="d-flex flex-wrap" [formGroup]="renewableForm">
+    <div class="formGroup">
+      <label>{{fields.isRenewable.label}}</label>
+      <div class="checkBoxGroup">
+        {{fields.isRinContract.label}}<input type="checkbox" [(ngModel)]="isRinContract" [ngModelOptions]="{standalone: true}" (change)="isRinContractCheck($event.target.checked)"
+          class="checkbox d-inline-block">
+      </div>
+    </div>
+    <ng-container *ngIf="isRinContract">
+      <div class="formGroup">
+        <label>{{fields.rinEquivalanceValue.label}}</label>
+        <div>
+          <input type="number" class="form-control d-inline-block" formControlName="rinEquivalanceValue" [ngClass]="{ 'invalid' : finalValidation ? rinEquivalanceValue.invalid : (rinEquivalanceValue.invalid && !rinEquivalanceValue.untouched) }" >
+        </div>
+      </div>
+      <div class="formGroup">
+        <label>{{fields.rinQuantity.label}}</label>
+        <div>
+          <input type="number" class="form-control d-inline-block" formControlName="rinQuantity" [ngClass]="{ 'invalid' : finalValidation ? rinQuantity.invalid : (rinQuantity.invalid && !rinQuantity.untouched) }" >
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>

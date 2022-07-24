@@ -1,0 +1,62 @@
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <!-- <h4 class="modal-title" id="modal-basic-title">Eka Email</h4> -->
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body animated fadeIn">
+    <div class="email-app">
+      <main>
+        <h4 class="text-center">Eka Mail</h4>
+        <p *ngIf="showWarning">
+          <ngb-alert type="danger" (close)="closeAlert()">{{errorMsg}}</ngb-alert>
+        </p>
+        <form [formGroup]="emailForm">
+          <div class="form-row mb-3">
+            <label class="col-2 col-sm-1 col-form-label" for="to">To:</label>
+            <div class="col-10 col-sm-11">
+              <input class="form-control" id="to" placeholder="Type email" type="email" formControlName="To" />
+            </div>
+          </div>
+          <div class="form-row mb-3">
+            <label class="col-2 col-sm-1 col-form-label" for="cc">CC:</label>
+            <div class="col-10 col-sm-11">
+              <input class="form-control" id="cc" placeholder="Type email" type="email" formControlName="CC" />
+            </div>
+          </div>
+          <div class="form-row mb-3">
+            <label class="col-2 col-sm-1 col-form-label" for="subject">Subject:</label>
+            <div class="col-10 col-sm-11" *ngIf="attachedDocument">
+              <input class="form-control" id="subject" placeholder="" type="email" formControlName="Subject"
+                value="{{ attachedDocument.fileName }}" />
+            </div>
+          </div>
+          <div class="form-row mb-3" *ngIf="attachmentRequired">
+            <label class="col-2 col-sm-1 col-form-label" for="bcc">Attachment:</label>
+            <div class="col-10 col-sm-11" *ngIf="attachedDocument">
+              <span>{{ attachedDocument.fileName }}</span>
+            </div>
+          </div>
+        </form>
+        <textarea class="form-control" [formControl]="body" id="message" name="body" placeholder="Click here to reply"
+          rows="12"></textarea>
+        <ng-container *ngIf="showLoader">
+          <div class="blur">
+              <div class="loader"></div>
+          </div>
+        </ng-container>
+      </main>
+    </div>
+  </div>
+  <div class="modal-footer justify-content-between">
+    <button type="button" class="btn btn-outline-dark" (click)="cancel(modal)">
+      Cancel
+    </button>
+    <button type="button" class="btn btn-primary" (click)="sendMail(modal)">
+      Send
+    </button>
+  </div>
+</ng-template>
+<img class="cursor searchIcon pd5" (click)="open(content)" src=".\assets\icons\Mail.png" />
